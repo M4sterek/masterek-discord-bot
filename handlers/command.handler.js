@@ -47,7 +47,7 @@ module.exports = (client) => {
                 .slice(prefix.length)
                 .trim()
                 .split(/ +/g)
-                console.log(args)
+                
             
                 const cmdName = args.shift().toLowerCase()
             
