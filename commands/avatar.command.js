@@ -1,7 +1,7 @@
 const {
     MessageEmbed
 } = require("discord.js")
-
+const {randomInt} = require(__dirname+"/../functions/random.function.js")
 module.exports = {
     name: "avatar",
     description: "Send avatar of mentioned user",
@@ -13,6 +13,9 @@ module.exports = {
         const {
             channel
         } = msg
+
+        const data = ["You look beautiful!", "Fine photo!", "You look amazing!"]
+
         if (!msg.mentions.users.size) {
             const avatarPng = msg.author.displayAvatarURL({
                 format: 'png',
@@ -29,11 +32,10 @@ module.exports = {
 
             const msgEmbed = new MessageEmbed()
                 .setAuthor(`Avatar for @${msg.author.tag}`, avatarPng)
-
                 .setColor(msg.member.displayHexColor)
                 .addField("Links: ", `[png](${avatarPng}) | [webp](${avatarWebp}) | [jpg](${avatarJpg})`, true)
                 .setImage(avatarPng)
-                .setFooter("You look beautiful!")
+                .setFooter(data[randomInt(0, data.length - 1)])
 
 
 
@@ -64,7 +66,7 @@ module.exports = {
             .setColor(userColor.displayHexColor)
             .addField("Links: ", `[png](${avatarPng}) | [webp](${avatarWebp}) | [jpg](${avatarJpg})`, true)
             .setImage(avatarPng)
-            .setFooter("You look beautiful!")
+            .setFooter(data[randomInt(0, data.length - 1)])
 
 
         channel.send(msgEmbed)
