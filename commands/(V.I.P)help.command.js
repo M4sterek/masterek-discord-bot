@@ -10,7 +10,6 @@ const {
 module.exports = {
     name: "help",
     description: "Show commands!",
-    args: true,
     usage: "[command]",
     example: "clear",
     run(msg, args) {

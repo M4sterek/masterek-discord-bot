@@ -9,7 +9,7 @@ module.exports = {
     example: "@Example#2332",
     guildOnly: true,
     aliases: ["zdjecie"],
-    run(msg) {
+    run(msg, args) {
         const {
             channel
         } = msg
@@ -36,13 +36,16 @@ module.exports = {
                 .setFooter("You look beautiful!")
 
 
-            channel.send(msgEmbed)
-            return
+
+            return channel.send(msgEmbed)
         }
 
 
         let memberTarget = msg.mentions.users.first()
         let userColor = msg.mentions.members.first()
+        if (!memberTarget && userColor) {
+            return channel.send("You need to mention smb or provide id")
+        }
         const avatarPng = memberTarget.displayAvatarURL({
             format: 'png',
             size: 1024
@@ -55,7 +58,7 @@ module.exports = {
             format: 'webp',
             size: 1024
         })
-        
+
         const msgEmbed = new MessageEmbed()
             .setAuthor(`Avatar for @${memberTarget.tag}`, avatarPng)
             .setColor(userColor.displayHexColor)
