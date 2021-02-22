@@ -1,5 +1,5 @@
 const {
-    MessageEmbed, Client
+    MessageEmbed
 } = require("discord.js")
 
 module.exports = {
@@ -9,7 +9,7 @@ module.exports = {
     example: "@Example#2332",
     guildOnly: true,
     aliases: ["zdjecie"],
-    run(msg, client) {
+    run(msg) {
         const {
             channel
         } = msg

@@ -95,7 +95,7 @@ module.exports = (client) => {
                     timeStamps.delete(author.id)
                 }, cooldown)
                 try{
-                    cmd.run(msg,args,client)
+                    cmd.run(msg,args)
                 }catch(error){
                     console.log(error)
                     msg.reply("there was an error")
