@@ -6,12 +6,12 @@ const client = new Client()
 
 require("dotenv").config()
 
-// Token
-const token = process.env.BOT_TOKEN
+
 //Initialize Handler
 commandHandler(client)
 events(client)
-client.login(token)
+
+client.login(config.token)
 
 
 
