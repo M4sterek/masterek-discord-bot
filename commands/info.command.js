@@ -1,9 +1,10 @@
-
 module.exports = {
-    name: "info",
-    description: "Info!",
-    run(msg){
-    const {channel} = msg
+  name: "info",
+  description: "Info!",
+  run(msg) {
+    const {
+      channel
+    } = msg
     const embed = {
       "title": "Ryuzaki",
       "description": "First bot created by m!",
@@ -24,20 +25,15 @@ module.exports = {
         "name": "Masterek",
         "icon_url": "https://cdn.discordapp.com/embed/avatars/0.png"
       },
-      "fields": [
-        {
-          "name": "🤔",
-          "value": "to use this bot try `!help`"
-        }
-      ]
-   };
-    channel.send({ embed });
-          
-        }
-        
-      }
-      
-    
-    
-        
+      "fields": [{
+        "name": "🤔",
+        "value": "to use this bot try `!help`"
+      }]
+    };
+    channel.send({
+      embed
+    });
 
+  }
+
+}

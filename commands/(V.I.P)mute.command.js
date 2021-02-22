@@ -1,4 +1,3 @@
-
 // module.exports = {
 //     name: "mute",
 //     description: "Mute player!",
@@ -12,11 +11,11 @@
 //         const mutedRole = msg.guild.roles.cache.get('808363924902248488')
 //         const memberMuted = msg.mentions.members.first()
 //         console.log(memberMuted)
-        
+
 //         if(!mutedRole){
 //             return channel.send("There is not **muted** role!")
 //         }
-        
+
 //         if(memberMuted === member){
 //             return channel.send("You cannot mute yourself!")
 //         }
@@ -26,7 +25,7 @@
 //         if(memberMuted.roles.cache.has(mutedRole.id)){
 //             return channel.send("This user is already muted!")
 //         }
-        
+
 //         try{
 //             memberMuted.roles.add(mutedRole)
 //         }catch(error){
@@ -34,5 +33,5 @@
 //         }
 
 //     }
-    
+
 // }
