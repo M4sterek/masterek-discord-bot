@@ -1,4 +1,7 @@
-const {Client, MessageEmbed} = require('discord.js')
+const {
+    Client,
+    MessageEmbed
+} = require('discord.js')
 const config = require('./config/config.js')
 const commandHandler = require('./handlers/command.handler.js')
 const events = require("./events/client.on")
@@ -12,10 +15,3 @@ commandHandler(client)
 events(client)
 
 client.login(config.token)
-
-
-
-
-
-
-

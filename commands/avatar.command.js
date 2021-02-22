@@ -42,9 +42,9 @@ module.exports = {
             return channel.send(msgEmbed)
         }
 
-
-        let memberTarget = msg.mentions.users.first()
-        let userColor = msg.mentions.members.first()
+        //let id = args[0]
+        let memberTarget = msg.mentions.users.first() //|| msg.client.users.fetch(id)
+        let userColor = msg.mentions.members.first() //|| msg.guild.members.fetch(id)
         if (!memberTarget && userColor) {
             return channel.send("You need to mention smb or provide id")
         }
