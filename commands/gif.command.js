@@ -1,4 +1,6 @@
-const {MessageEmbed} = require('discord.js')
+const {
+    MessageEmbed
+} = require('discord.js')
 const fetch = require('node-fetch')
 const {
     randomInt
@@ -12,14 +14,13 @@ module.exports = {
     guildOnly: true,
     cooldown: 5,
     async run(msg, args) {
-        const gifEmbed = new MessageEmbed()
+
         let keyword = args
         let url = `https://api.giphy.com/v1/gifs/search?api_key=${process.env.GIPHY_TOKEN}&g=g&limit=50&q=${keyword}`
         let response = await fetch(url)
-        if(!response) return
+        if (!response) return
         let json = await response.json()
-        gifEmbed.setImage(json.data[randomInt(0,json.data.length-1)].url)
-        msg.channel.send(gifEmbed)
+        msg.channel.send(json.data[randomInt(0, json.data.length - 1)].url)
 
     }
 }

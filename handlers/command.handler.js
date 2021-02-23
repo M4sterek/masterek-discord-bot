@@ -71,14 +71,14 @@ module.exports = (client) => {
         // Check if commands has args but they are not provided
         if (cmd.args && !args.length) {
             const msgEmbed = new MessageEmbed()
-            .setTitle(`❌ | You must specify argument, **${msg.author.tag}**!`)
+                .setTitle(`❌ | You must specify argument, **${msg.author.tag}**!`)
             // Check if the command has usage
             if (cmd.usage) {
-                msgEmbed.addField("Usage:",`\`${prefix}${cmdName} ${cmd.usage}\``)
+                msgEmbed.addField("Usage:", `\`${prefix}${cmdName} ${cmd.usage}\``)
                 //reply += `\nUsage: \`${prefix}${cmdName} ${cmd.usage}\``
             }
             if (cmd.example) {
-                msgEmbed.addField("Example:",`\`${prefix}${cmdName} ${cmd.example}\``)
+                msgEmbed.addField("Example:", `\`${prefix}${cmdName} ${cmd.example}\``)
                 //reply += `\nExample: \`${prefix}${cmdName} ${cmd.example}\``
             }
             return msg.channel.send(msgEmbed)
@@ -100,11 +100,12 @@ module.exports = (client) => {
             if (now < expTime) {
                 const timeLeft = (expTime - now) / 1000
                 return msg.channel.send(`U need to wait **${timeLeft.toFixed(0)}s** to use this command!`)
-                .then(msg => {
-                    msg.delete({
-                        timeout: 3000
+                    .then(msg => {
+                        msg.delete({
+                            timeout: 3000
+                        })
                     })
-                })
+                    .catch(console.error)
             }
         }
         timeStamps.set(author.id, now)
