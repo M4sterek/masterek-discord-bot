@@ -100,6 +100,11 @@ module.exports = (client) => {
             if (now < expTime) {
                 const timeLeft = (expTime - now) / 1000
                 return msg.channel.send(`U need to wait **${timeLeft.toFixed(0)}s** to use this command!`)
+                .then(msg => {
+                    msg.delete({
+                        timeout: 3000
+                    })
+                })
             }
         }
         timeStamps.set(author.id, now)
