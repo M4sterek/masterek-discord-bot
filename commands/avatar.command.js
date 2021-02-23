@@ -9,7 +9,7 @@ module.exports = {
     example: "@Example#2332",
     guildOnly: true,
     aliases: ["zdjecie"],
-    run(msg, args) {
+    run(msg) {
         const {
             channel
         } = msg

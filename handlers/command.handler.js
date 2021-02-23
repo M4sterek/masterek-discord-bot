@@ -51,7 +51,7 @@ module.exports = (client) => {
         // Check if the message starts with prefix(!)
         if (!msg.content.startsWith(prefix)) return
 
-        // Parts a messages and print it in console
+        // Parts a messages
         const args = msg.content
             .slice(prefix.length)
             .trim()
