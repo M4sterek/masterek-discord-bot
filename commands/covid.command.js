@@ -46,7 +46,7 @@ module.exports = {
         covidEmbed
             .setTitle(`:flag_${countryCode}: | ${countryArray.Country}`)
             .setThumbnail(`https://www.countryflags.io/${countryCode}/flat/64.png`)
-            .setImage("https://pics.freeicons.io/uploads/icons/png/2485005581599778124-512.png")
+            .setImage("https://pics.freeicons.io/uploads/icons/png/2485005581599778124-256.png")
             .addField(countryArray.Confirmed, "Confirmed")
             .addField(countryArray.Deaths, "Deaths")
             .addField(countryArray.Recovered, "Recovered")
