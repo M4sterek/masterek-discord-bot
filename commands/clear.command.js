@@ -1,8 +1,8 @@
+const {waitingTime} = require(__dirname+"/../config/config.js")
 module.exports = {
     name: "clear",
     description: "Clears chat!",
     args: true,
-    qargs: 1,
     usage: "<amount>",
     example: "5",
     guildOnly: true,
@@ -13,14 +13,14 @@ module.exports = {
         const {
             channel
         } = msg;
-        const amount = parseInt(args[0])
+        let amount = parseInt(args[0])
         if (!Number.isInteger(amount)) {
             return channel.send("You must specify amount to clear!")
         }
-        if (amount >= 100) {
+        if (amount > 99) {
             amount = 99;
         }
-        if (amount < 1 || amount > 99) {
+        if (amount < 1) {
             return channel.send("**The amount must be between 1<=>99!**")
         }
 
@@ -28,7 +28,7 @@ module.exports = {
         channel.send(`Cleared ${amount} messages!`)
             .then(msg => {
                 msg.delete({
-                    timeout: 3000
+                    timeout: waitingTime
                 })
             })
             .catch(console.error);

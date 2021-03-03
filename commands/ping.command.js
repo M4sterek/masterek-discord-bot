@@ -1,6 +1,5 @@
-const {
-    WebSocketManager
-} = require("discord.js")
+
+
 module.exports = {
     name: "ping",
     description: "Pings the bot!",
@@ -12,6 +11,7 @@ module.exports = {
         const ping = client.ws.ping
         msg.channel.send(`🏓 | L pong! **${latency}** ms.`);
         msg.channel.send(`💻 | ApiLatency:! **${ping}** ms.`);
+
     }
 
 }

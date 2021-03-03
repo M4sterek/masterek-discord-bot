@@ -1,5 +1,6 @@
 {
-  "name": "masterek-bot-org",
+  "name": "masterek-discord-bot",
+  "botname": "Lawliet",
   "version": "1.0.0",
   "description": " ",
   "main": "bot.js",
@@ -12,14 +13,19 @@
   "license": "UNLICENSED",
   "dependencies": {
     "ascii-table": "0.0.9",
+    "buffer-image": "^1.0.0",
+    "canvas-constructor": "^4.1.0",
     "chalk": "^4.1.0",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "git": "^0.1.5",
     "jikan-node": "^1.2.1",
+    "nan": "^2.14.2",
     "node-fetch": "^2.6.1",
     "node-osu": "^2.2.0",
-    "pm2": "^4.5.4"
+    "node-pre-gyp": "^0.17.0",
+    "pm2": "^4.5.5",
+    "simple-get": "^4.0.0"
   },
   "devDependencies": {}
 }

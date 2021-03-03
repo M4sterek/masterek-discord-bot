@@ -83,10 +83,11 @@ module.exports = (client) => {
             }
             return msg.channel.send(msgEmbed)
         }
-        if (cmd.qargs && args.length > cmd.qargs) {
-            let reply = "Too much args"
-            return msg.channel.send(reply)
-        }
+       
+        // if (cmd.qargs && args.length > cmd.qargs) {
+        //     let reply = "Too much args"
+        //     return msg.channel.send(reply)
+        // }
 
         if (!cooldowns.has(cmdName)) {
             cooldowns.set(cmdName, new Collection())

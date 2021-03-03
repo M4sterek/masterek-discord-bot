@@ -4,7 +4,7 @@ const fetch = require('node-fetch')
 const {randomInt} = require(__dirname+"/../functions/random.function.js")
 module.exports = {
     name: "cat",
-    description: "Sends a random cat photo",
+    description: "Sends a random cat photo!",
     cooldown: 5,
     aliases: ["kot"],
     async run(msg){
