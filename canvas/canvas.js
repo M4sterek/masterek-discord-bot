@@ -64,43 +64,64 @@ const covidCanvas = async (msg) => {
 //                                        // 
 //                                        // 
 ////////////////////////////////////////////
-const welcomeCanvas = async (msg) => {
+const welcomeCanvas = async (client, member, msg) => {
     const canvas = createCanvas(1000, 500)
     const ctx = canvas.getContext('2d')
-    const avatar = await loadImage(msg.author.displayAvatarURL({
+    const avatar = await loadImage(member.user.displayAvatarURL({
         format: 'png',
         size: 256
     }))
-    const tag = msg.author.tag
-    const tagMeas = ctx.measureText(tag)
+    const tag = member.user.tag
+
 
     ctx.beginPath()
-    ctx.fillStyle = '#148F77'
+    ctx.fillStyle = '#212F3D'
     ctx.fillRect(0, 0, 1000, 500)
     ctx.stroke()
     ctx.closePath()
     ctx.save()
+    
+    ctx.beginPath( )
+    ctx.shadowColor = "green"
+    ctx.shadowBlur = 30
+    ctx.shadowOffsetX = 10
+    ctx.shadowOffsetY = 10
+    ctx.arc(500, 200, 128, 0, 2 * Math.PI, true)
+    ctx.stroke()
+    ctx.restore()
 
-
+    ctx.save()
 
     ctx.beginPath()
     ctx.arc(500, 200, 128, 0, 2 * Math.PI, true)
     ctx.closePath()
     ctx.clip()
     ctx.drawImage(avatar, 500 - (avatar.width / 2), 200 - (avatar.height / 2))
+
+
     
+
     ctx.restore()
 
     ctx.beginPath()
-    const welcome = `Welcome ${tag} \n Number #${msg.guild.memberCount}`
+    const welcome = `Welcome ${tag}`
+    const number = `Numbereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee #${member.guild.memberCount}`
+    console.log(ctx.measureText(number))
     ctx.fillStyle = 'white'
-    ctx.font = "48px Cloister Black"
-    ctx.textAlign='center'
-    ctx.fillText(welcome,500,400,1000)
+    let fontSize = 50
+    do{
+        fontSize -= 10
+    }while(ctx.measureText(number).width>=250||ctx.measureText(welcome).width>=250)
+    ctx.font = `${fontSize}px Impact`
+    ctx.textAlign = 'center'
+    ctx.fillText(welcome, 500, 400)
+    ctx.fillText(number,500,450)
 
 
     const attachment = new MessageAttachment(canvas.toBuffer())
+    //console.log(client.channels.cache.find(channel => channel.id===703900962435235870))
     msg.channel.send(attachment)
+
 
 }
 module.exports = {
