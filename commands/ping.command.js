@@ -5,12 +5,13 @@ module.exports = {
     description: "Pings the bot!",
     run(msg) {
         const {
-            client
+            client,
+            channel
         } = msg;
         let latency = Date.now() - msg.createdTimestamp
         const ping = client.ws.ping
-        msg.channel.send(`🏓 | L pong! **${latency}** ms.`);
-        msg.channel.send(`💻 | ApiLatency:! **${ping}** ms.`);
+        channel.send(`🏓 | L pong! **${latency}** ms.`);
+        channel.send(`💻 | ApiLatency:! **${ping}** ms.`);
 
     }
 

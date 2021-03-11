@@ -9,14 +9,14 @@ module.exports = {
     example: "@Example#2332",
     guildOnly: true,
     aliases: ["zdjecie"],
-    run(msg) {
+    run(msg, args) {
         const {
             channel
         } = msg
 
         const data = ["You look beautiful!", "Fine photo!", "You look amazing!"]
-
-        if (!msg.mentions.users.size) {
+        
+        if (!args.length) {
             const avatarPng = msg.author.displayAvatarURL({
                 format: 'png',
                 size: 1024
@@ -42,10 +42,13 @@ module.exports = {
             return channel.send(msgEmbed)
         }
 
-        //let id = args[0]
-        let memberTarget = msg.mentions.users.first() //|| msg.client.users.fetch(id)
-        let userColor = msg.mentions.members.first() //|| msg.guild.members.fetch(id)
-        if (!memberTarget && userColor) {
+        let id = args[0]
+        console.log(id)
+        // || msg.client.users.cache.fetch(id)
+        //|| msg.guild.members.cache.fetch(id)
+        const memberTarget = msg.mentions.members.first() 
+        const userColor =  msg.mentions.users.first() 
+        if (!memberTarget && !userColor) {
             return channel.send("You need to mention smb or provide id")
         }
         const avatarPng = memberTarget.displayAvatarURL({

@@ -11,10 +11,9 @@ const {
 
 const ascii = require("ascii-table")
 
-const table = new ascii().setHeading("Commands File", "CMD", "Status")
+
 module.exports = (client) => {
-
-
+    const table = new ascii().setHeading("Commands File", "CMD", "Status")
 
     client.commands = new Collection()
     const cooldowns = new Collection()
@@ -30,17 +29,18 @@ module.exports = (client) => {
             client.commands.set(cmd.name, cmd)
             table.addRow(file, cmd.name, "✅")
         } else if (!cmd.name) {
-            table.addRow(file, cmd.name, "❌ -> missing name")
-            continue;
+            table.addRow(file, cmd.name, "❌ -> missing name!")
+            continue
         } else if (!cmd.description) {
-            table.addRow(file, cmd.name, "❌ -> missing description")
-            continue;
+            table.addRow(file, cmd.name, "❌ -> missing description!")
+            continue
         }
     }
     console.log(table.toString())
 
     client.on('message', msg => {
         const {
+            channel,
             author,
             guild
         } = msg
@@ -58,11 +58,39 @@ module.exports = (client) => {
             .split(/ +/g)
 
 
-        const cmdName = args.shift().toLowerCase()
+        const cmdName = args
+            .shift()
+            .toLowerCase()
 
         const cmd = client.commands.get(cmdName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName))
         // Check if command exist
         if (!cmd) return
+
+        if (cmd.rolesRequired && cmd.rolesRequired.length) {
+            const memberRoles = msg.member.roles.cache.map((roles) => roles.name)
+            if (!memberRoles.includes(cmd.rolesRequired)) {
+                return channel.send(`\`❌ | You don't have required role to use this command | ${cmd.rolesRequired.join(" ,")}\``)
+            }
+        }
+
+
+
+        if (cmd.botPermissions && cmd.botPermissions.length) {
+            if (!guild.me.permissionsIn(channel).has(cmd.botPermissions)) {
+                return channel.send(`\`❌ | I don't have enough permissions to execute this command! | ${cmd.botPermissions.join(" ,")}\``)
+            }
+        }
+
+        if (cmd.userPermissions && cmd.userPermissions.length) {
+            if (!msg.member.permissionsIn(channel).has(cmd.userPermissions)) {
+                return channel.send(`\`❌ | You don't have enough permissions to use this command! | ${cmd.userPermissions.join(", ")}\``)
+            }
+        }
+
+
+
+
+
         // Check if the message isn send on pm
         if (cmd.guildOnly && !guild) {
             return msg.reply("This command can't be executed inside DM!")
@@ -83,7 +111,7 @@ module.exports = (client) => {
             }
             return msg.channel.send(msgEmbed)
         }
-       
+
         // if (cmd.qargs && args.length > cmd.qargs) {
         //     let reply = "Too much args"
         //     return msg.channel.send(reply)

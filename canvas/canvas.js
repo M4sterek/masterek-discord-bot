@@ -64,7 +64,7 @@ const covidCanvas = async (msg) => {
 //                                        // 
 //                                        // 
 ////////////////////////////////////////////
-const welcomeCanvas = async (client, member, msg) => {
+const welcomeCanvas = async (member, channel) => {
     const canvas = createCanvas(1000, 500)
     const ctx = canvas.getContext('2d')
     const avatar = await loadImage(member.user.displayAvatarURL({
@@ -105,22 +105,22 @@ const welcomeCanvas = async (client, member, msg) => {
 
     ctx.beginPath()
     const welcome = `Welcome ${tag}`
-    const number = `Numbereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee #${member.guild.memberCount}`
-    console.log(ctx.measureText(number))
+    const welcomeNumber = `Number #${member.guild.memberCount}`
+    
     ctx.fillStyle = 'white'
     let fontSize = 50
     do{
         fontSize -= 10
-    }while(ctx.measureText(number).width>=250||ctx.measureText(welcome).width>=250)
+    }while(ctx.measureText(welcomeNumber).width>=250||ctx.measureText(welcome).width>=250)
     ctx.font = `${fontSize}px Impact`
     ctx.textAlign = 'center'
     ctx.fillText(welcome, 500, 400)
-    ctx.fillText(number,500,450)
+    ctx.fillText(welcomeNumber,500,450)
 
 
     const attachment = new MessageAttachment(canvas.toBuffer())
     //console.log(client.channels.cache.find(channel => channel.id===703900962435235870))
-    msg.channel.send(attachment)
+    channel.send(attachment)
 
 
 }

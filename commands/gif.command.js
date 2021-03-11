@@ -13,15 +13,18 @@ module.exports = {
     example: "cats",
     guildOnly: true,
     cooldown: 5,
-    
+
     async run(msg, args) {
+        const {
+            channel
+        } = msg
 
         let keyword = args
         let url = `https://api.giphy.com/v1/gifs/search?api_key=${process.env.GIPHY_TOKEN}&g=g&limit=50&q=${keyword}`
         let response = await fetch(url)
         if (!response) return
         let json = await response.json()
-        msg.channel.send(json.data[randomInt(0, json.data.length - 1)].url)
+        channel.send(json.data[randomInt(0, json.data.length - 1)].url)
 
     }
 }

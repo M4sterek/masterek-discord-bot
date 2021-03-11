@@ -6,7 +6,10 @@ const {
     prefix,
     waitingTime
 } = require(__dirname + "/../config/config.js")
-
+const {
+    waitingEmbed,
+    defaultEmbed,
+} = require(__dirname + "/../canvas/embed.js")
 
 module.exports = {
     name: "help",
@@ -17,67 +20,75 @@ module.exports = {
         const {
             commands
         } = msg.client
-        //const data = [];
-        let botinviteUrl = "https://discord.com/api/oauth2/authorize?client_id=691785599912509440&permissions=8&scope=bot"
-        const helpEmbed = new MessageEmbed().setColor(3066993)
-        const waitingEmbed = new MessageEmbed().setColor(15844367)
+        const {
+            channel
+        } = msg
 
+        let botinviteUrl = "https://discord.com/api/oauth2/authorize?client_id=691785599912509440&permissions=8&scope=bot"
+        
 
         if (!args.length) {
-            //data.push(commands.map((cmd) => cmd.name).join(", "))
-            helpEmbed
+            const membersCount = msg.client.guilds.cache.map((Guild) => Guild.memberCount)
+            const serversCount = msg.client.guilds.cache.map((Guild) => Guild.id).length
+            let memberNumber = 0;
+
+            for (memberCountNumber of membersCount) {
+                memberNumber += memberCountNumber
+            }
+
+            defaultEmbed(msg)
                 .setTitle("🧾 | Commands list")
-                .setDescription(`\`MY PREFIX IS ${prefix} \` `)
+                .setDescription(`\`MY PREFIX IS ${prefix} \n I'm on ${serversCount} servers with ${memberNumber} players \` `)
             for (command of commands.map((cmd) => cmd.name)) {
                 let cmd = commands.get(command)
-                helpEmbed
+                defaultEmbed(msg)
                     .addField(`${cmd.name.toUpperCase()}:`, `${cmd.description}`)
             }
-            helpEmbed
-            .addField(`\u200B`, `\u200B`)
-            .addField(`**Add bot to your server!**`,`[Click me!](${botinviteUrl})` )
-            return msg.channel.send(helpEmbed)
-                // .then(() => {
-                //     if (msg.channel.type === "dm") return
-                //     msg.reply("📄 | **I've sent a list of command on dm!**")
-                // })
-                // .catch(err => {
-                //     console.error(`Couldn't send dm to ${msg.author.tag}\n`, err)
-                //     msg.reply("❌ | It seems I can't dm you! Do you have DMs disabled?")
-                // })
+            defaultEmbed(msg)
+                .addField(`\u200B`, `\u200B`)
+                .addField(`**Add bot to your server!**`, `[Click me!](${botinviteUrl})`)
+            return channel.send(defaultEmbed(msg))
+            // .then(() => {
+            //     if (msg.channel.type === "dm") return
+            //     msg.reply("📄 | **I've sent a list of command on dm!**")
+            // })
+            // .catch(err => {
+            //     console.error(`Couldn't send dm to ${msg.author.tag}\n`, err)
+            //     msg.reply("❌ | It seems I can't dm you! Do you have DMs disabled?")
+            // })
 
         }
 
         const cmdName = args[0].toLowerCase()
         const cmd = commands.get(cmdName) || commands.find((c) => c.aliases && c.aliases.includes(cmdName))
         if (!cmd) {
-            return msg.channel.send(`❌ | Command \`${cmdName}\` doesn't exist`)
+            return channel.send(`❌ | Command \`${cmdName}\` doesn't exist`)
             // .then(msg =>{
             //     msg.delete({timeout:2000})
             // })
         }
-        waitingEmbed
-            .setTitle(`Command | ${cmd.name.toUpperCase()}`)
-        helpEmbed
+        // waitingEmbed
+        //     .setTitle(`Command | ${cmd.name.toUpperCase()}`)
+        defaultEmbed(msg)
             .setTitle(`Command: ${cmd.name.toUpperCase()}`)
             .addField(`Description:`, `${cmd.description}`)
             .setThumbnail("https://pics.freeicons.io/uploads/icons/png/1841465761591557586-128.png")
         if (cmd.usage) {
-            helpEmbed.addField(`Usage:`, `${prefix}${cmd.name} ${cmd.usage}`)
+            defaultEmbed(msg).addField(`Usage:`, `${prefix}${cmd.name} ${cmd.usage}`)
         }
         if (cmd.example) {
-            helpEmbed.addField(`Example:`, `${prefix}${cmd.name} ${cmd.example}`)
+            defaultEmbed(msg).addField(`Example:`, `${prefix}${cmd.name} ${cmd.example}`)
         }
         if (cmd.cooldown) {
-            helpEmbed.addField(`Cooldown:`, `${cmd.cooldown}s`)
+            defaultEmbed(msg).addField(`Cooldown:`, `${cmd.cooldown}s`)
         }
         if (cmd.aliases) {
-            helpEmbed.addField('Aliases:', `${cmd.aliases.join(", ")}`)
+            defaultEmbed(msg).addField('Aliases:', `${cmd.aliases.join(", ")}`)
         }
-        msg.channel.send(waitingEmbed)
+        channel.send(waitingEmbed().setTitle(`Command | ${cmd.name.toUpperCase()}`))
             .then(msg => {
                 setTimeout(() => {
-                    msg.edit(helpEmbed)
+                    msg.edit(defaultEmbed(msg))
                 }, waitingTime)
             })
 

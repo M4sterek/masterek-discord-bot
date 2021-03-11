@@ -18,11 +18,14 @@ module.exports = {
     guildOnly: true,
     aliases: ["cov"],
     async run(msg, args) {
+        const {
+            channel
+        } = msg
         const covidEmbed = new MessageEmbed().setColor(3066993)
             .setImage("https://pics.freeicons.io/uploads/icons/png/2485005581599778124-256.png")
         const waitingEmbed = new MessageEmbed().setColor(15844367)
-        .setTitle("Waiting")
-        .setDescription("Waiting for data...")
+            .setTitle("Waiting")
+            .setDescription("Waiting for data...")
         // if (args[0] === "list") {
         //     const listEmbed = new MessageEmbed().setTitle("Countries")
         //     const data = []
@@ -53,7 +56,7 @@ module.exports = {
                 .addField(confirmed, "Confirmed")
                 .addField(deaths, "Confirmed")
                 .addField(recovered, "Confirmed")
-            return msg.channel.send(waitingEmbed).then(msg => {
+            return channel.send(waitingEmbed).then(msg => {
                 setTimeout(() => msg.edit(covidEmbed), waitingTime)
             }, )
 
@@ -83,8 +86,8 @@ module.exports = {
             .addField(countryArray.Recovered, "Recovered")
             .addField(countryArray.Active, "Active")
             .setFooter(`Statistics on: ${countryArray.Date}`, '');
-            
-        msg.channel.send(waitingEmbed)
+
+        channel.send(waitingEmbed)
             .then(msg => {
                 setTimeout(() => {
                     msg.edit(covidEmbed)
