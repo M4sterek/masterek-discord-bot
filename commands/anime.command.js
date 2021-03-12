@@ -10,12 +10,14 @@ const {
 module.exports = {
     name: "anime",
     description: "Sends info about provided anime!",
+    usage: "[anime]",
+    example: "Death Note",
     guildOnly: true,
+    args:true,
     cooldown: 5,
     async run(msg, args) {
-        console.log(prefix)
+    
         const sendAnimeInfo = (jsonArray, channel) => {
-
             const animeInfoEmbed = new MessageEmbed()
                 .setAuthor(`${jsonArray.attributes.titles.en || jsonArray.attributes.titles.en_jp} (${jsonArray.attributes.titles.ja_jp})`, jsonArray.attributes.posterImage.large)
                 .setDescription(jsonArray.attributes.description)
@@ -28,8 +30,11 @@ module.exports = {
                 .addField("🛑 Rating", jsonArray.attributes.ageRating + " | " + jsonArray.attributes.ageRatingGuide, true)
                 .addField("📺 Type", jsonArray.attributes.showType, true)
                 .addField("📊 Status", jsonArray.attributes.status.toUpperCase(), true)
-                .addField("💾 Link", `[Click me!](${jsonArray.links.self})`, true)
+                //.addField("Genres", jsonArray.relationship.genres)
+                .addField("⏯ Trailer", `[Click me!](https://www.youtube.com/watch?v=${jsonArray.attributes.youtubeVideoId})`, true)
                 .addField("⭐ Favorites Count", jsonArray.attributes.favoritesCount, true)
+                .addField("👑 Rank", `**TOP ${jsonArray.attributes.ratingRank}**`, true)
+                .addField("🏆 Average Rating", `**${jsonArray.attributes.averageRating}/100**`, true)
                 .setFooter("Powered by kitsu.io", msg.author.displayAvatarURL())
             channel.send(animeInfoEmbed)
         }
@@ -76,7 +81,8 @@ module.exports = {
         let url = `https://kitsu.io/api/edge/anime?filter[text]=${animeName}`
         let response = await fetch(url)
         let json = await response.json()
-
+        console.log(json.data[0])
+        console.log(json.data[0].relationship)
 
         animeEmbed
             .setAuthor("TYPE THE NUMBER YOU WANT TO SHOW!", msg.author.displayAvatarURL())

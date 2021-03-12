@@ -17,21 +17,21 @@ module.exports = {
         const memberToKick = mentions.members.first()
         const reason =[...args].slice(1).join(" ")
         if(!memberToKick){
-            return channel.send("❌ | You must provide user to kick!")
+            return channel.send("**❌ | You must provide user to kick!**")
         }
         if(memberToKick.id === author.id){
-            return channel.send("❌ | You can't kick yourself!")
+            return channel.send("**❌ | You can't kick yourself!**")
         }
         if(memberToKick.id === client.user.id){
-            return channel.send("❌ | You can't kick me!")
+            return channel.send("**❌ | You can't kick me!**")
         }
         if(!memberToKick.kickable){
-            return channel.send("❌ | I can't kick mentioned user, maybe higher rank required!")
+            return channel.send("**❌ | I can't kick mentioned user, maybe higher rank required!**")
         }
 
         memberToKick.kick(reason).then(kickedMember => {
             kickedMember.send
-            channel.send(`Kicked: ${kickedMember.nickname} \n ${reason ? `Reason${reason}` : " "}`)
+            channel.send(`**Kicked: ${kickedMember.nickname} \n ${reason ? `Reason${reason}**` : " "}`)
         })
     }
 }
