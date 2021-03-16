@@ -13,32 +13,65 @@ module.exports = {
     usage: "[anime]",
     example: "Death Note",
     guildOnly: true,
-    args:true,
+    args: true,
     cooldown: 5,
     async run(msg, args) {
-    
-        const sendAnimeInfo = (jsonArray, channel) => {
+
+        const {
+            channel
+        } = msg
+
+        //
+        let animeName = args
+        let url = `https://kitsu.io/api/edge/anime?filter[text]=${animeName}`
+        let response = await fetch(url)
+        let json = await response.json()
+        //
+
+        const animeEmbed = new MessageEmbed()
+            .setAuthor("TYPE THE NUMBER YOU WANT TO SHOW!", msg.author.displayAvatarURL())
+            .setFooter(`Powered by kitsu.io | type ${prefix}cancel to cancel`, msg.author.displayAvatarURL())
+            .setColor(3447003)
+
+        const filter = response => {
+            return response.author.id === msg.author.id
+        }
+
+        const filterEmoji = (reaction, user) => {
+            return reaction.emoji.name === '▶️' && user.id === msg.author.id
+        }
+
+        const sendAnimeInfo = (jsonArray) => {
             const animeInfoEmbed = new MessageEmbed()
-                .setAuthor(`${jsonArray.attributes.titles.en || jsonArray.attributes.titles.en_jp} (${jsonArray.attributes.titles.ja_jp})`, jsonArray.attributes.posterImage.large)
+                .setAuthor(`${jsonArray.attributes.titles.en || jsonArray.attributes.titles.en_jp || jsonArray.attributes.titles.en_us} (${jsonArray.attributes.titles.ja_jp ? jsonArray.attributes.titles.ja_jp : "Japanese title not found!"})`, jsonArray.attributes.posterImage.large,`https://kitsu.io/anime/${jsonArray.attributes.slug}`)
                 .setDescription(jsonArray.attributes.description)
                 .setColor(3447003)
                 .setThumbnail(jsonArray.attributes.posterImage.medium)
-                .addField("📅 Release Date", jsonArray.attributes.startDate, true)
-                .addField("📆 End Date", jsonArray.attributes.endDate, true)
-                .addField("🎬 Episodes", jsonArray.attributes.episodeCount, true)
-                .addField("📏 Episodes length", jsonArray.attributes.episodeLength, true)
-                .addField("🛑 Rating", jsonArray.attributes.ageRating + " | " + jsonArray.attributes.ageRatingGuide, true)
-                .addField("📺 Type", jsonArray.attributes.showType, true)
-                .addField("📊 Status", jsonArray.attributes.status.toUpperCase(), true)
-                //.addField("Genres", jsonArray.relationship.genres)
-                .addField("⏯ Trailer", `[Click me!](https://www.youtube.com/watch?v=${jsonArray.attributes.youtubeVideoId})`, true)
-                .addField("⭐ Favorites Count", jsonArray.attributes.favoritesCount, true)
-                .addField("👑 Rank", `**TOP ${jsonArray.attributes.ratingRank}**`, true)
-                .addField("🏆 Average Rating", `**${jsonArray.attributes.averageRating}/100**`, true)
+                .addField("📅 Release Date", jsonArray.attributes.startDate ? jsonArray.attributes.startDate : " - ", true)
+                .addField("📆 End Date", jsonArray.attributes.endDate ? jsonArray.attributes.endDate : " - ", true)
+                .addField("🎬 Episodes", jsonArray.attributes.episodeCount ? jsonArray.attributes.episodeCount : " - ", true)
+                .addField("📏 Episodes length", jsonArray.attributes.episodeLength ? jsonArray.attributes.episodeLength : " - ", true)
+                .addField("🛑 Rating", `${jsonArray.attributes.ageRatingGuide ?  jsonArray.attributes.ageRatingGuide : " - " } | ${jsonArray.attributes.ageRating ? jsonArray.attributes.ageRating : " - "}`, true)
+                .addField("📺 Type", jsonArray.attributes.showType ? jsonArray.attributes.showType : " - ", true)
+                .addField("⏯ Trailer", jsonArray.attributes.youtubeVideoId ? `[Click me!](https://www.youtube.com/watch?v=${jsonArray.attributes.youtubeVideoId} )` : " - ", true)
+                .addField("⭐ Favorites Count", jsonArray.attributes.favoritesCount ? jsonArray.attributes.favoritesCount : " - ", true)
+                .addField("👑 Rank", jsonArray.attributes.ratingRank ? `**TOP ${jsonArray.attributes.ratingRank}**` : " - ", true)
+                .addField("🏆 Average Rating", jsonArray.attributes.averageRating ? `**${jsonArray.attributes.averageRating}/100**` : " - ", true)
                 .setFooter("Powered by kitsu.io", msg.author.displayAvatarURL())
             channel.send(animeInfoEmbed)
+            // .then(msg => {
+            //     msg.react('▶️')
+            //     msg.awaitReactions(filterEmoji, {time: 1500})
+            //         .then(() => {
+            //             msg.edit("")
+            //         })
+            //         .catch(console.error)
+
+            // })
+
+
         }
-        const messageCollected = (animeEmbed, channel) => {
+        const messageCollected = () => {
             channel.send(animeEmbed)
                 .then(() => {
                     channel.awaitMessages(filter, {
@@ -48,21 +81,22 @@ module.exports = {
                         })
                         .then(collected => {
                             collectedMessage = collected.first().content
+                            let number = parseInt(collectedMessage) - 1
                             switch (collectedMessage) {
                                 case "1":
-                                    sendAnimeInfo(json.data[0], channel)
+                                    sendAnimeInfo(json.data[number])
                                     break
                                 case "2":
-                                    sendAnimeInfo(json.data[1], channel)
+                                    sendAnimeInfo(json.data[number])
                                     break
                                 case "3":
-                                    sendAnimeInfo(json.data[2], channel)
+                                    sendAnimeInfo(json.data[number])
                                     break
                                 case "4":
-                                    sendAnimeInfo(json.data[3], channel)
+                                    sendAnimeInfo(json.data[number])
                                     break
                                 case "5":
-                                    sendAnimeInfo(json.data[4], channel)
+                                    sendAnimeInfo(json.data[number])
                                     break
                                 case `${prefix}cancel`:
                                     return
@@ -73,32 +107,20 @@ module.exports = {
                         })
                 })
         }
-        const {
-            channel
-        } = msg
-        const animeEmbed = new MessageEmbed()
-        let animeName = args
-        let url = `https://kitsu.io/api/edge/anime?filter[text]=${animeName}`
-        let response = await fetch(url)
-        let json = await response.json()
-        console.log(json.data[0])
-        console.log(json.data[0].relationship)
 
-        animeEmbed
-            .setAuthor("TYPE THE NUMBER YOU WANT TO SHOW!", msg.author.displayAvatarURL())
-            .setFooter(`Powered by kitsu.io | type ${prefix}cancel to cancel`, msg.author.displayAvatarURL())
-            .setColor(3447003)
+
+
+        console.log(json.data[0].relationships)
+
         for (i = 0; i < 5; i++) {
             const anime = json.data[i]
-            let animeName = anime.attributes.titles.en || anime.attributes.titles.en_jp
+            let animeName = anime.attributes.titles.en || anime.attributes.titles.en_jp || anime.attributes.titles.en_us
             let animeNameJp = anime.attributes.titles.ja_jp
-            animeEmbed.addField(`\u200B`, `${i+1}. [${animeName}](${anime.links.self}) (${animeNameJp})`)
+            animeEmbed.addField(`\u200B`, `${i+1}. [${animeName}](https://kitsu.io/anime/${anime.attributes.slug}) (${animeNameJp ? animeNameJp : "Japanese title not found!"})`)
 
         }
-        const filter = response => {
-            return response.author.id === msg.author.id
-        }
-        messageCollected(animeEmbed, channel)
+
+        messageCollected()
 
     }
 }
