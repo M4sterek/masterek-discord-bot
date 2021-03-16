@@ -1,4 +1,0 @@
->>HELP
->>JOIN/LEAVE
->>QUIZ
->>USER
