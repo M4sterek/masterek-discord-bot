@@ -6,7 +6,7 @@ module.exports = {
     example: "@MasterekQ#2733 Being toxic",
     cooldown: 5,
     guildOnly: true,
-    rolesRequired: [],
+    rolesRequired: ["BOSS"],
     run(msg, args) {
         const {
             author,
@@ -30,8 +30,8 @@ module.exports = {
         }
 
         memberToKick.kick(reason).then(kickedMember => {
-            kickedMember.send
-            channel.send(`**Kicked: ${kickedMember.nickname} \n ${reason ? `Reason${reason}**` : " "}`)
+            kickedMember.send(`Kicked from: ${kickedMember.guild.name} \n${reason? `Reason: ${reason}` : " "}`)
+            channel.send(`**Kicked: ${kickedMember.displayName} \n${reason ? `Reason: ${reason}**` : " "}`)
         })
     }
 }

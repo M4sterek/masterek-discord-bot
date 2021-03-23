@@ -21,6 +21,7 @@ module.exports = {
         const {
             channel
         } = msg
+        const dataCountries = []
         const covidEmbed = new MessageEmbed().setColor(3066993)
             .setImage("https://pics.freeicons.io/uploads/icons/png/2485005581599778124-256.png")
         const waitingEmbed = new MessageEmbed().setColor(15844367)
@@ -50,9 +51,9 @@ module.exports = {
             let confirmed = json.TotalConfirmed
             let deaths = json.TotalDeaths
             let recovered = json.TotalRecovered
-
+            
             covidEmbed
-                .setTitle("ewew | Global")
+                .setTitle("Covid | Global")
                 .addField(confirmed, "Confirmed")
                 .addField(deaths, "Confirmed")
                 .addField(recovered, "Confirmed")
@@ -62,11 +63,16 @@ module.exports = {
 
         }
 
+        // let urlCountries = "https://api.covid19api.com/countries"
+        // let responseCountries = await fetch(urlCountries)
+        // let jsonCountries = await responseCountries.json()
+        // for(countries of jsonCountries){
 
-
+        //     dataCountries.push(countries.Country)
+        // }
+        // console.log(dataCountries)
         let country = args[0]
-
-
+        
         let url = `https://api.covid19api.com/country/${country}`
         let response = await fetch(url)
         let json = await response.json()
@@ -85,7 +91,7 @@ module.exports = {
             .addField(countryArray.Deaths, "Deaths")
             .addField(countryArray.Recovered, "Recovered")
             .addField(countryArray.Active, "Active")
-            .setFooter(`Statistics on: ${countryArray.Date}`, '');
+            .setFooter(`Statistics on: ${countryArray.Date.slice(0,10)}`, '');
 
         channel.send(waitingEmbed)
             .then(msg => {

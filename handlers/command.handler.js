@@ -99,6 +99,7 @@ module.exports = (client) => {
         // Check if commands has args but they are not provided
         if (cmd.args && !args.length) {
             const msgEmbed = new MessageEmbed()
+                .setColor(15158332)
                 .setTitle(`❌ | You must specify argument, **${msg.author.tag}**!`)
             // Check if the command has usage
             if (cmd.usage) {

@@ -24,10 +24,9 @@ client.login(token)
 // Client is ready
 client.on('ready', () => {
   console.log(chalk.red('<============================================>'))
-  console.log(chalk.red('Logged in as', client.user))
+  console.log(chalk.red('Logged in as', client.user.tag))
   console.log(chalk.red('<============================================>'))
   client.user.setActivity(`Death Note ${prefix}help`, {
     type: 'PLAYING'
   })
-
 })

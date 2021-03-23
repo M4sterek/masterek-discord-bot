@@ -30,21 +30,23 @@ module.exports = {
         let response = await fetch(characterURL)
         let json = await response.json()
         //
+        const data = []
         const sendCharacterInfo = (jsonArray) => {
             const characterInfoEmbed = new MessageEmbed()
-                .setAuthor(`${jsonArray.attributes.names.en || jsonArray.attributes.names.en_jp || jsonArray.attributes.names.en_us} (${jsonArray.attributes.names.ja_jp ? jsonArray.attributes.names.ja_jp : "Japanese title not found!"})`, jsonArray.attributes.image.original,`https://myanimelist.net/character/${jsonArray.attributes.malId}`)
-                .setDescription(jsonArray.attributes.description.replace(/<br>/g,"\n"))
+                .setAuthor(`${jsonArray.attributes.names.en || jsonArray.attributes.names.en_jp || jsonArray.attributes.names.en_us} (${jsonArray.attributes.names.ja_jp ? jsonArray.attributes.names.ja_jp : "Japanese title not found!"})`, jsonArray.attributes.image.original, `https://myanimelist.net/character/${jsonArray.attributes.malId}`)
+                .setDescription(jsonArray.attributes.description.replace(/<br>/g, "\n"))
                 .setColor(3447003)
                 .setThumbnail(jsonArray.attributes.image.original)
-                channel.send(characterInfoEmbed)
+            channel.send(characterInfoEmbed)
         }
-        console.log(json.data)
+
         for (i = 0; i < 5; i++) {
             const characterName = json.data[i].attributes.names.en
             const characterNameJp = json.data[i].attributes.names.ja_jp
             const characterMalID = json.data[i].attributes.malId
-            characterEmbed.addField(`${i+1}.`, `[${characterName}](https://myanimelist.net/character/${characterMalID}) (${characterNameJp ? characterNameJp : "Japanese name not found!"})`)
+            data.push(`**${i+1}. [${characterName}](https://myanimelist.net/character/${characterMalID})** (${characterNameJp ? characterNameJp : "Japanese name not found!"})`)
         }
+        characterEmbed.setDescription(data)
         channel.send(characterEmbed)
             .then(() => {
                 channel.awaitMessages(filter, {

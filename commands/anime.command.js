@@ -27,7 +27,7 @@ module.exports = {
         let response = await fetch(url)
         let json = await response.json()
         //
-
+        const data = []
         const animeEmbed = new MessageEmbed()
             .setAuthor("TYPE THE NUMBER YOU WANT TO SHOW!", msg.author.displayAvatarURL())
             .setFooter(`Powered by kitsu.io | type ${prefix}cancel to cancel`, msg.author.displayAvatarURL())
@@ -59,18 +59,8 @@ module.exports = {
                 .addField("🏆 Average Rating", jsonArray.attributes.averageRating ? `**${jsonArray.attributes.averageRating}/100**` : " - ", true)
                 .setFooter("Powered by kitsu.io", msg.author.displayAvatarURL())
             channel.send(animeInfoEmbed)
-            // .then(msg => {
-            //     msg.react('▶️')
-            //     msg.awaitReactions(filterEmoji, {time: 1500})
-            //         .then(() => {
-            //             msg.edit("")
-            //         })
-            //         .catch(console.error)
-
-            // })
-
-
         }
+        
         const messageCollected = () => {
             channel.send(animeEmbed)
                 .then(() => {
@@ -102,24 +92,20 @@ module.exports = {
                                     return
                             }
                         })
-                        .catch(() => {
-                            channel.send("**You have got 30s to answer!**")
+                        .catch((error) => {
+                            console.log(error)
                         })
                 })
         }
-
-
-
-        console.log(json.data[0].relationships)
-
+        console.log
         for (i = 0; i < 5; i++) {
             const anime = json.data[i]
             let animeName = anime.attributes.titles.en || anime.attributes.titles.en_jp || anime.attributes.titles.en_us
             let animeNameJp = anime.attributes.titles.ja_jp
-            animeEmbed.addField(`\u200B`, `${i+1}. [${animeName}](https://kitsu.io/anime/${anime.attributes.slug}) (${animeNameJp ? animeNameJp : "Japanese title not found!"})`)
+            data.push(`**${i+1}. [${animeName}](https://kitsu.io/anime/${anime.attributes.slug})** (${animeNameJp ? animeNameJp : "Japanese title not found!"})`)
 
         }
-
+        animeEmbed.setDescription(data)
         messageCollected()
 
     }

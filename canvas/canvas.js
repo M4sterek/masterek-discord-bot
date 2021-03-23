@@ -119,7 +119,7 @@ const welcomeCanvas = async (member, channel) => {
 
 
     const attachment = new MessageAttachment(canvas.toBuffer())
-    //console.log(client.channels.cache.find(channel => channel.id===703900962435235870))
+    
     channel.send(attachment)
 
 
