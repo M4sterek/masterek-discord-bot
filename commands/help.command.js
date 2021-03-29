@@ -38,7 +38,7 @@ module.exports = {
 
             defaultEmbed(msg)
                 .setTitle("🧾 | Commands list")
-                .setDescription(`\`MY PREFIX IS ${prefix} \n I'm on ${serversCount} servers with ${memberNumber} players \` `)
+                .setDescription(`\`\`\` MY PREFIX IS ${prefix} \n I'm on ${serversCount} servers with ${memberNumber} players \`\`\` `)
             for (command of commands.map((cmd) => cmd.name)) {
                 let cmd = commands.get(command)
                 defaultEmbed(msg)
@@ -85,6 +85,15 @@ module.exports = {
         if (cmd.aliases) {
             defaultEmbed(msg).addField('Aliases:', `${cmd.aliases.join(", ")}`)
         }
+        if (cmd.botPermissions) {
+            msgEmbed.addField("Bot permissions:", `\`${prefix}${cmdName} ${cmd.botPermissions}\``)
+            //reply += `\nExample: \`${prefix}${cmdName} ${cmd.example}\``
+        }
+        if (cmd.rolesRequired) {
+            msgEmbed.addField("Roles required:", `\`${prefix}${cmdName} ${cmd.rolesRequired}\``)
+            //reply += `\nExample: \`${prefix}${cmdName} ${cmd.example}\``
+        }
+
         channel.send(waitingEmbed().setTitle(`Command | ${cmd.name.toUpperCase()}`))
             .then(msg => {
                 setTimeout(() => {
