@@ -14,7 +14,7 @@ module.exports = {
     example: "Death Note",
     guildOnly: true,
     args: true,
-    cooldown: 5,
+    cooldown: 10,
     async run(msg, args) {
 
         const {
@@ -97,14 +97,20 @@ module.exports = {
                         })
                 })
         }
-        console.log
         for (i = 0; i < 5; i++) {
+            try{
             const anime = json.data[i]
             let animeName = anime.attributes.titles.en || anime.attributes.titles.en_jp || anime.attributes.titles.en_us
             let animeNameJp = anime.attributes.titles.ja_jp
             data.push(`**${i+1}. [${animeName}](https://kitsu.io/anime/${anime.attributes.slug})** (${animeNameJp ? animeNameJp : "Japanese title not found!"})`)
-
+            }catch(error){
+                console.log(error)
+            }
         }
+        if(data.length<5){
+            channel.send("There was an error to finding more anime by provided name")
+        }
+
         animeEmbed.setDescription(data)
         messageCollected()
 

@@ -1,3 +1,4 @@
+const {Permissions: {FLAGS}} = require('discord.js')
 module.exports = {
     name: "kick",
     description: "Kicks mentioned member!",
@@ -6,7 +7,8 @@ module.exports = {
     example: "@MasterekQ#2733 Being toxic",
     cooldown: 5,
     guildOnly: true,
-    rolesRequired: ["BOSS"],
+    rolesRequired: [],
+    userPermissions: [FLAGS.ADMINISTRATOR],
     run(msg, args) {
         const {
             author,
@@ -15,17 +17,17 @@ module.exports = {
             client
         } = msg
         const memberToKick = mentions.members.first()
-        const reason =[...args].slice(1).join(" ")
-        if(!memberToKick){
+        const reason = [...args].slice(1).join(" ")
+        if (!memberToKick) {
             return channel.send("**❌ | You must provide user to kick!**")
         }
-        if(memberToKick.id === author.id){
+        if (memberToKick.id === author.id) {
             return channel.send("**❌ | You can't kick yourself!**")
         }
-        if(memberToKick.id === client.user.id){
+        if (memberToKick.id === client.user.id) {
             return channel.send("**❌ | You can't kick me!**")
         }
-        if(!memberToKick.kickable){
+        if (!memberToKick.kickable) {
             return channel.send("**❌ | I can't kick mentioned user, maybe higher rank required!**")
         }
 

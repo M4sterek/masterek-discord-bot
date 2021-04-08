@@ -4,7 +4,7 @@ const {
 const fetch = require('node-fetch')
 const {
     randomInt
-} = require(__dirname + "/../functions/random.function.js")
+} = require(__dirname + "/../resources/functions/random.function.js")
 module.exports = {
     name: "gif",
     description: "Send a gif into chat!",

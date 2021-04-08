@@ -6,9 +6,6 @@ const {
     MessageEmbed
 } = require('discord.js')
 const fetch = require('node-fetch')
-const {
-    randomInt
-} = require(__dirname + "/../functions/random.function.js")
 module.exports = {
     name: "cat",
     description: "Sends a random cat photo!",

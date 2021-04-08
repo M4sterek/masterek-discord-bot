@@ -1,7 +1,7 @@
 const {
     MessageEmbed
 } = require("discord.js")
-const {randomInt} = require(__dirname+"/../functions/random.function.js")
+const {randomInt} = require(__dirname+"/../resources/functions/random.function.js")
 module.exports = {
     name: "avatar",
     description: "Send avatar of mentioned user!",
