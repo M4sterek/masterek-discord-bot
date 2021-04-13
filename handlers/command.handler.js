@@ -144,8 +144,8 @@ module.exports = (client) => {
         }, cooldown)
         try {
             cmd.run(msg, args)
-        } catch (error) {
-            console.log(error)
+        } catch (err) {
+            console.error(err)
             msg.reply("there was an error")
 
         }

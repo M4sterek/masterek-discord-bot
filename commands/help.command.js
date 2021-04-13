@@ -2,7 +2,11 @@ const {
     MessageEmbed,
     Collection
 } = require('discord.js')
-const {Permissions: {FLAGS}} = require('discord.js')
+const {
+    Permissions: {
+        FLAGS
+    }
+} = require('discord.js')
 const {
     prefix,
     waitingTime
@@ -22,31 +26,43 @@ module.exports = {
         } = msg
 
         if (!args.length) {
-            console.log(commands.map((cmd) => cmd,))
+            let categories = [...new Set(commands.map(command => command.category))]
+            // .filter((value)=>{
+            //     return value !== undefined
+            // })
             let botinviteUrl = "https://discord.com/api/oauth2/authorize?client_id=691785599912509440&permissions=8&scope=bot"
+            let serverinviteUrl = "https://discord.gg/XsGQxMQb"
             const membersCount = msg.client.guilds.cache.map((Guild) => Guild.memberCount)
             const serversCount = msg.client.guilds.cache.map((Guild) => Guild.id).length
-            const helpEmbed = new MessageEmbed()
 
             let memberNumber = 0;
             for (memberCountNumber of membersCount) {
                 memberNumber += memberCountNumber
             }
 
-            helpEmbed
+            const helpEmbed = new MessageEmbed()
                 .setColor(3066993)
                 .setTitle("🧾 | Commands list")
                 .setDescription(`\`\`\` MY PREFIX IS ${prefix} \n I'm on ${serversCount} servers with ${memberNumber} players \`\`\` `)
 
-            for (command of commands.map((cmd) => cmd.name)) {
-                let cmd = commands.get(command)
-                helpEmbed
-                    .addField(`${cmd.name.toUpperCase()}:`, `${cmd.description}`)
+            for (let categoryCmd of categories) {
+                let data = []
+                for (let cmd of commands.map((cmd) => cmd.name)) {
+                    let command = commands.get(cmd)
+                    if (command.category === categoryCmd ) {
+                        data.push(`\`${command.name}\``)
+                    }
+                }
+
+                helpEmbed.addField(`${categoryCmd===undefined ? "UNDEFINED: " : `${categoryCmd .toUpperCase()}:`}`, data.join(' '))
+
+
             }
-            
+
             helpEmbed
                 .addField(`\u200B`, `\u200B`)
-                .addField(`**Add bot to your server!**`, `[Click me!](${botinviteUrl})`)
+                .addField(`**Add bot to your server!**`, `[Click me!](${botinviteUrl})`,true)
+                .addField(`**Join discord**`, `[Click me!](${serverinviteUrl})`,true)
             return channel.send(helpEmbed)
         }
 
@@ -60,7 +76,7 @@ module.exports = {
         helpCommandEmbed
             .setColor(3066993)
             .setTitle(`Command: \`${cmd.name.toUpperCase()}\``)
-        if(cmd.description){
+        if (cmd.description) {
             data.push(`**Description:** ${cmd.description}`)
         }
         if (cmd.usage) {
