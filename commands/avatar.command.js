@@ -4,6 +4,7 @@ const {
 const {randomInt} = require(__dirname+"/../resources/functions/random.function.js")
 module.exports = {
     name: "avatar",
+    category: "other",
     description: "Send avatar of mentioned user!",
     usage: "<player.id>",
     example: "@Example#2332",

@@ -15,7 +15,7 @@ module.exports = {
             .shift()
         
         if (msgContent === `<@!${client.user.id}>`) {
-            channel.send(`Watashi wa L desu! Use \`${prefix}help\``)
+            channel.send(`:pray: :open_hands:! Use \`${prefix}help\``)
         }
 
     }

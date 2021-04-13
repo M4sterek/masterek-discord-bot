@@ -1,6 +1,7 @@
 const {Permissions: {FLAGS}} = require('discord.js')
 module.exports = {
     name: "kick",
+    category: "moderation",
     description: "Kicks mentioned member!",
     usage: "[nick] <reason>",
     args: true,

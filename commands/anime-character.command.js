@@ -7,6 +7,7 @@ const {
 } = require(__dirname + "/../config/config.js")
 module.exports = {
     name: "character",
+    category: "anime",
     description: "Sends info about provided anime character!",
     usage: "[character]",
     example: "Light Yagami",
@@ -41,10 +42,15 @@ module.exports = {
         }
 
         for (i = 0; i < 5; i++) {
+            try{
             const characterName = json.data[i].attributes.names.en
             const characterNameJp = json.data[i].attributes.names.ja_jp
             const characterMalID = json.data[i].attributes.malId
             data.push(`**${i+1}. [${characterName}](https://myanimelist.net/character/${characterMalID})** (${characterNameJp ? characterNameJp : "Japanese name not found!"})`)
+            }
+            catch(error){
+                console.log(error)
+            }
         }
         characterEmbed.setDescription(data)
         channel.send(characterEmbed)

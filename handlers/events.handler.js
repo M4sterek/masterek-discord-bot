@@ -24,7 +24,7 @@ module.exports = (client) => {
         if (event.name && typeof event.run === "function") {
             table.addRow(file, event.name, "✅")
         } else if (!event.name) {
-            table.addRow(file, event.name, "❌ -> missing name!")
+            table.addRow(file, event.name, "❌ -> missing event name!")
         } else if (!event.run) {
             table.addRow(file, event.name, chalk.red("❌ -> missing run()!"))
             console.log(table.toString())

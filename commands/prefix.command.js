@@ -1,5 +1,6 @@
 module.exports = {
     name: "prefix",
+    category: "other",
     description: "Set prefix of current guild!",
     guildOnly: true,
     run(msg, args) {

@@ -10,11 +10,6 @@ const commandHandler = require('./handlers/command.handler.js')
 const eventHandler = require("./handlers/events.handler")
 const chalk = require('chalk')
 const client = new Client()
-const {
-  welcomeCanvas
-} = require("./canvas/canvas.js")
-require("dotenv").config()
-
 // Initialize Command Handler
 commandHandler(client)
 // Initialize Events Handler
@@ -26,7 +21,7 @@ client.on('ready', () => {
   console.log(chalk.red('<============================================>'))
   console.log(chalk.red('Logged in as', client.user.tag))
   console.log(chalk.red('<============================================>'))
-  client.user.setActivity(`Death Note ${prefix}help`, {
+  client.user.setActivity(`Alchemy || ${prefix}help`, {
     type: 'PLAYING'
   })
 })

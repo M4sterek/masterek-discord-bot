@@ -1,6 +1,6 @@
 const {
     welcomeCanvas
-} = require(__dirname + "/../canvas/canvas.js")
+} = require(__dirname + "/../resources/canvas/canvas.js")
 const channelId = "808320839547486230"
 module.exports = {
     name: "guildMemberAdd",

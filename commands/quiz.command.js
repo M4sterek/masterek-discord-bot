@@ -10,6 +10,7 @@ const {
 } = require(__dirname + "/../config/config.js")
 module.exports = {
     name: "quiz",
+    category: "fun",
     description: "QUIZ!",
     usage: "[anime]",
     example: "quiz",

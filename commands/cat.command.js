@@ -8,6 +8,7 @@ const {
 const fetch = require('node-fetch')
 module.exports = {
     name: "cat",
+    category: "fun",
     description: "Sends a random cat photo!",
     cooldown: 5,
     aliases: ["kot"],

@@ -7,6 +7,7 @@ const {
 } = require(__dirname + "/../resources/functions/random.function.js")
 module.exports = {
     name: "gif",
+    category: "fun",
     description: "Send a gif into chat!",
     usage: "<category of gif>",
     args: true,

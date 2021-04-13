@@ -1,6 +1,7 @@
 
 module.exports = {
     name: "ping",
+    category: "other",
     description: "Pings the bot!",
     run(msg) {
         const {

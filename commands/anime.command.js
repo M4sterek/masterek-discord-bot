@@ -9,6 +9,7 @@ const {
 
 module.exports = {
     name: "anime",
+    category: "anime",
     description: "Sends info about provided anime!",
     usage: "[anime]",
     example: "Death Note",
@@ -16,7 +17,6 @@ module.exports = {
     args: true,
     cooldown: 10,
     async run(msg, args) {
-
         const {
             channel
         } = msg
@@ -32,15 +32,7 @@ module.exports = {
             .setAuthor("TYPE THE NUMBER YOU WANT TO SHOW!", msg.author.displayAvatarURL())
             .setFooter(`Powered by kitsu.io | type ${prefix}cancel to cancel`, msg.author.displayAvatarURL())
             .setColor(3447003)
-
-        const filter = response => {
-            return response.author.id === msg.author.id
-        }
-
-        const filterEmoji = (reaction, user) => {
-            return reaction.emoji.name === '▶️' && user.id === msg.author.id
-        }
-
+            
         const sendAnimeInfo = (jsonArray) => {
             const animeInfoEmbed = new MessageEmbed()
                 .setAuthor(`${jsonArray.attributes.titles.en || jsonArray.attributes.titles.en_jp || jsonArray.attributes.titles.en_us} (${jsonArray.attributes.titles.ja_jp ? jsonArray.attributes.titles.ja_jp : "Japanese title not found!"})`, jsonArray.attributes.posterImage.large,`https://kitsu.io/anime/${jsonArray.attributes.slug}`)
@@ -64,6 +56,9 @@ module.exports = {
         const messageCollected = () => {
             channel.send(animeEmbed)
                 .then(() => {
+                    const filter = response => {
+                        return response.author.id === msg.author.id
+                    }
                     channel.awaitMessages(filter, {
                             max: 1,
                             time: 30000,

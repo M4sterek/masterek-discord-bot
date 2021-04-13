@@ -2,12 +2,14 @@ const {
     MessageEmbed,
     Collection
 } = require('discord.js')
+const {Permissions: {FLAGS}} = require('discord.js')
 const {
     prefix,
     waitingTime
 } = require(__dirname + "/../config/config.js")
 module.exports = {
     name: "help",
+    category: "other",
     description: "Show commands!",
     usage: "[command]",
     example: "clear",
@@ -19,10 +21,9 @@ module.exports = {
             channel
         } = msg
 
-        let botinviteUrl = "https://discord.com/api/oauth2/authorize?client_id=691785599912509440&permissions=8&scope=bot"
-
-
         if (!args.length) {
+            console.log(commands.map((cmd) => cmd,))
+            let botinviteUrl = "https://discord.com/api/oauth2/authorize?client_id=691785599912509440&permissions=8&scope=bot"
             const membersCount = msg.client.guilds.cache.map((Guild) => Guild.memberCount)
             const serversCount = msg.client.guilds.cache.map((Guild) => Guild.id).length
             const helpEmbed = new MessageEmbed()
@@ -42,6 +43,7 @@ module.exports = {
                 helpEmbed
                     .addField(`${cmd.name.toUpperCase()}:`, `${cmd.description}`)
             }
+            
             helpEmbed
                 .addField(`\u200B`, `\u200B`)
                 .addField(`**Add bot to your server!**`, `[Click me!](${botinviteUrl})`)

@@ -1,6 +1,7 @@
 const {waitingTime} = require(__dirname+"/../config/config.js")
 module.exports = {
     name: "clear",
+    category: "other",
     description: "Clears chat!",
     args: true,
     usage: "<amount>",

@@ -2,6 +2,6 @@ require("dotenv").config()
 
 module.exports = {
     token: process.env.TOKEN,
-    prefix: "!",
+    prefix: "ed.",
     waitingTime: 1000,
 }

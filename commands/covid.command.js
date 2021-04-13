@@ -10,6 +10,7 @@ const {
 } = require('pm2')
 module.exports = {
     name: "covid",
+    category: "other",
     description: "Sends info about covid stats!",
     usage: "<global|list|country>",
     args: true,
