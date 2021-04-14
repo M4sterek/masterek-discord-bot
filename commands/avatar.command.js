@@ -42,41 +42,31 @@ module.exports = {
 
             return channel.send(msgEmbed)
         }
-
-        let id = args[0]
-        console.log(id)
-        // || msg.client.users.cache.fetch(id)
-        //|| msg.guild.members.cache.fetch(id)
         const memberTarget = msg.mentions.members.first() 
-        const userColor =  msg.mentions.users.first() 
-        if (!memberTarget && !userColor) {
+        const userTarget =  msg.mentions.users.first() 
+        if (!memberTarget && !userTarget) {
             return channel.send("You need to mention smb or provide id")
         }
-        const avatarPng = memberTarget.displayAvatarURL({
+        const avatarPng = userTarget.displayAvatarURL({
             format: 'png',
             size: 1024
         })
-        const avatarJpg = memberTarget.displayAvatarURL({
+        const avatarJpg = userTarget.displayAvatarURL({
             format: 'jpg',
             size: 1024
         })
-        const avatarWebp = memberTarget.displayAvatarURL({
+        const avatarWebp = userTarget.displayAvatarURL({
             format: 'webp',
             size: 1024
         })
-
+        
         const msgEmbed = new MessageEmbed()
-            .setAuthor(`Avatar for @${memberTarget.tag}`, avatarPng)
-            .setColor(userColor.displayHexColor)
+            .setAuthor(`Avatar for ${userTarget.tag}`, avatarPng)
+            .setColor(memberTarget.displayHexColor)
             .addField("Links: ", `[png](${avatarPng}) | [webp](${avatarWebp}) | [jpg](${avatarJpg})`, true)
             .setImage(avatarPng)
             .setFooter(data[randomInt(0, data.length - 1)])
-
-
-        channel.send(msgEmbed)
+    
+        channel.send(msgEmbed)    
     }
-
-
-
-
 }
