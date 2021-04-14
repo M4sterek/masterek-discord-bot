@@ -145,7 +145,7 @@ module.exports = (client) => {
         try {
             cmd.run(msg, args)
         } catch (err) {
-            console.log(err)
+            console.error(err)
             msg.reply("there was an error")
 
         }
