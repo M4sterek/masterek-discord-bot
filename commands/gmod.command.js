@@ -8,13 +8,13 @@ module.exports = {
         const {channel} = msg
         const msgContent = "https://steamcommunity.com/sharedfiles/filedetails/?id=2428289110"
         msg.author.send(msgContent)
-            .catch(error=>{
-                console.log(error)
-                channel.send("I cannot send a dm to you!")
+            .then(()=>{
+                if(msg.channel.type==="dm ") return
+                msg.channel.send("Link to gmod collection has been sent on dm!")
             })
-        if(channel.type="dm") return
-        msg.channel.send("Link to gmod collection has been sent on dm!")
-        
-        
+            .catch(error=>{
+                console.error(error)
+                msg.reply("I cannot send a dm to you!")
+            })
     }
 }

@@ -54,7 +54,7 @@ module.exports = {
                     }
                 }
 
-                helpEmbed.addField(`${categoryCmd===undefined ? "UNDEFINED: " : `${categoryCmd .toUpperCase()}:`}`, data.join(' '))
+                helpEmbed.addField(`${categoryCmd===undefined ? "❌ | UNDEFINED: " : `${categoryCmd .toUpperCase()}:`}`, data.join(' '))
 
 
             }
