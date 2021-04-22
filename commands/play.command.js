@@ -2,126 +2,169 @@ const {
     Permissions: {
         FLAGS
     },
-    MessageEmbed
+    MessageEmbed,
+    Collection
 } = require("discord.js")
 const {
     prefix
 } = require(__dirname + "/../config/config.js")
-const path = require('path');
+const {
+    isURL
+} = require(__dirname + "/../resources/functions/isUrl.function.js")
 const ytdl = require('ytdl-core');
 const ytsr = require('ytsr');
+const admin = require("firebase-admin");
+const queue = new Collection()
 module.exports = {
     name: "music",
     category: "music",
     description: "play some music!",
+    args: true,
     usage: "[title]",
     example: "Never gonna give u up",
-    botPermissions: [FLAGS.ADMINISTRATOR],
+    botPermissions: [],
     userPermissions: [],
+    aliases: ["p"],
     async run(msg, args) {
         const {
             member,
             channel,
-            client
+            client,
+            guild
         } = msg
-        const playMusicUrl = (connection, URL) => {
+
+        const serverQueue = queue.get(guild.id)
+        const playSong = (URL) => {
+            const serverQueue = queue.get(guild.id)
             const broadcast = client.voice.createBroadcast()
             broadcast.play(ytdl(URL))
-            connection.play(broadcast)
-        }
-        const voiceChannel = member.voice.channel
-        if (args[0] === "play") {
-            if (!voiceChannel) {
-                return channel.send("You must be in voice channel!")
-            }
-            if (!voiceChannel.joinable) {
-                return channel.send("I cannot join into your channel! Maybe I need more permisssions!")
-            }
-            const data = []
-            const titleArgs = args.slice(1).join(" ")
-            const ytsrResponse = await ytsr(titleArgs, {
-                gl: "pl",
-                limit: 5,
-                safeSearch: true
-            })
-            console.log(ytsrResponse)
-            if(!ytsrResponse){
-                return channel.send("There was an error!")
-            }
-            if (!ytsrResponse.items.length) {
-                return channel.send("Videos not found!")
-            }
-            let i = 1;
-            for (const video of ytsrResponse.items) {
-                try{
-                //if(video.type !== "video") return
-                data.push(`${i}. **[${video.title}](${video.url})**`)
-                i++
-                }
-                catch(error){
-                    console.log(error)
-                }
-            }
-            if (!data.length) {
-                return channel.send("Video not found!")
-            }
-            const ytEmbed = new MessageEmbed()
-                .setAuthor("TYPE THE NUMBER YOU WANT TO SHOW!", msg.author.displayAvatarURL())
-                .setFooter(`Powered by ytdl-core | type ${prefix}cancel to cancel`, msg.author.displayAvatarURL())
-                .setColor(3447003)
-                .setDescription(data)
-
-            return voiceChannel.join()
-                .then(async (connection) => {
-                    channel.send(`Joined in **${voiceChannel.name}**`)
-                    channel.send(ytEmbed)
-                        .then(() => {
-                            const filter = response => {
-                                return response.author.id === msg.author.id
+            const dispatcher = serverQueue.connection
+                .play(ytdl(URL))
+                .on('finish', () => {
+                    serverQueue.songs.shift()
+                    if (!serverQueue.songs.length) {
+                        return setTimeout(() => {
+                            if (!serverQueue.songs.length) {
+                                serverQueue.playing = false
+                                return serverQueue.vcChannel.leave()
                             }
-                            channel.awaitMessages(filter, {
-                                    max: 1,
-                                    time: 30000,
-                                    errors: ["time"]
-                                })
-                                .then(collected => {
-                                    collectedMessage = collected.first().content
-                                    let number = parseInt(collectedMessage) - 1
-                                    switch (collectedMessage) {
-                                        case "1":
-                                            playMusicUrl(connection, ytsrResponse.items[number].url)
-                                            break
-                                        case "2":
-                                            playMusicUrl(connection, ytsrResponse.items[number].url)
-                                            break
-                                        case "3":
-                                            playMusicUrl(connection, ytsrResponse.items[number].url)
-                                            break
-                                        case "4":
-                                            playMusicUrl(connection, ytsrResponse.items[number].url)
-                                            break
-                                        case "5":
-                                            playMusicUrl(connection, ytsrResponse.items[number].url)
-                                            break
-                                        case `${prefix}cancel`:
-                                            return
-
-                                    }
-                                })
-                                .catch(error => {
-                                    console.log(error)
-                                    voiceChannel.leave()
-                                    return channel.send(`Left the ${voiceChannel.name}, time runned up!`)
-                                })
-                        })
+                            playSong(serverQueue.songs[0].url)
+                        }, 3000)
+                    }
+                    playSong(serverQueue.songs[0].url)
                 })
-                .catch(console.error())
         }
-        if (args[0] === "stop") {
-            voiceChannel.leave()
-            return channel.send(`Left the ${voiceChannel.name}`)
+
+        const voiceChannel = member.voice.channel;
+
+        if (!voiceChannel) {
+            return channel.send("You must be in voice chat to use this command!")
+        }
+        if (!voiceChannel.joinable) {
+            return channel.send(`I can't join in ${voiceChannel.name}! Maybe I don't have enough permissions.`)
+        }
+        if (args[0] === "play") {
+            let titleArg;
+            try {
+                titleArg = new URL(args[1])
+                if (titleArg.host !== "www.youtube.com") {
+                    return channel.send("Unknown file format!")
+                }
+            } catch {
+                titleArg = args[1]
+            }
+
+            if (isURL(titleArg, URL) === false) {
+                try {
+                    const filter1 = await ytsr.getFilters(args.splice(1,args.length-1).join(" "))
+                    const filters1 = filter1.get('Type').get('Video')
+                    const result = await ytsr(filters1.url, {
+                        pages: 1
+                    })
+                    titleArg = result.items[0].url
+
+                } catch {
+                    console.error("Error with searching video!")
+                    return channel.send("Error with searching video! | Maybe it doesn't exist")
+                }
+            }
+            const songInfo = await ytdl.getInfo(titleArg)
+            const songLength = `${Math.floor(songInfo.videoDetails.lengthSeconds/60)}:${songInfo.videoDetails.lengthSeconds%60}`
+            let song = {
+                author: songInfo.videoDetails.ownerChannelName,
+                length: songLength,
+                miniature: songInfo.videoDetails.thumbnails[0].url,
+                title: songInfo.videoDetails.title,
+                url: songInfo.videoDetails.video_url
+            }
+            if (!serverQueue) {
+                const queueConstructor = {
+                    txtChannel: msg.channel,
+                    vcChannel: voiceChannel,
+                    connection: null,
+                    songs: [],
+                    volume: 10,
+                    playing: true
+                }
+                queueConstructor.songs.push(song)
+                queue.set(guild.id, queueConstructor)
+                try {
+                    const connection = await voiceChannel.join()
+                    queue.get(guild.id).connection = connection
+                    queue.get(guild.id).txtChannel.send(`\`${song.title}\` **added to queue!**`)
+                    return playSong(queue.get(guild.id).songs[0].url)
+                } catch {
+                    queue.get(guild.id).songs.shift
+                    console.log("Unable to play video!")
+                }
+
+            }
+            if (serverQueue.playing === true) {
+                serverQueue.songs.push(song)
+                return serverQueue.txtChannel.send(`\`${song.title}\` **added to queue!**`)
+            }
+            try {
+                serverQueue.songs.push(song)
+                serverQueue.txtChannel.send(`\`${song.title}\` **added to queue!**`)
+                const connection = await voiceChannel.join()
+                serverQueue.connection = connection
+                serverQueue.playing = true
+                return playSong(serverQueue.songs[0].url)
+            } catch {
+                serverQueue.songs.push(song).get(guild.id).songs.shift
+                console.log("Unable to play video!")
+            }
+
+        }
+        if(args[0]==="queue"){
+            if(!serverQueue){
+                return channel.send("Server doesn't exists! You need to use play first!")
+            }
+            if(!serverQueue.songs.length){
+                return serverQueue.txtChannel.send("Queue is empty!")
+            }
+
+            const song = serverQueue.songs[0]
+            const queueEmbed = new MessageEmbed()
+            .setColor(3066993)
+            .setAuthor("Song queue")
+            .setThumbnail(song.miniature)
+            const songs = serverQueue.songs.splice(1,serverQueue.songs.length-1)
+            if(!songs.length){
+                queueEmbed
+                    .setDescription(`💿 | NOW PLAYING\n**[${song.title}](${song.url})**\n**${song.author}** ${song.length}`)
+                return serverQueue.txtChannel.send(queueEmbed)
+            }
+            let data = []
+            let i = 1
+            for(let song of serverQueue.songs){
+                data.push(`${i}. [${song.title}](${song.url}) [\`${song.length}\`]`)
+            }
+            queueEmbed
+                .setDescription(`💿 | NOW PLAYING\n**[${song.title}](${song.url})**\n**${song.author}** ${song.length}\n\n${data}`)
 
 
+            return serverQueue.txtChannel.send(queueEmbed)
         }
     }
 }

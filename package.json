@@ -22,6 +22,7 @@
     "dotenv": "^8.2.0",
     "ffmpeg-static": "^4.2.8",
     "firebase": "^8.4.1",
+    "firebase-admin": "^9.6.0",
     "jikan-node": "^1.2.1",
     "mime": "^2.5.2",
     "nan": "^2.14.2",

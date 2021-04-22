@@ -8,7 +8,7 @@ const {
 const {
     readdirSync
 } = require("fs")
-
+var admin = require("firebase-admin");
 const ascii = require("ascii-table")
 
 
@@ -38,7 +38,7 @@ module.exports = (client) => {
     }
     console.log(table.toString())
 
-    client.on('message', msg => {
+    client.on('message', async(msg) => {
         const {
             channel,
             author,
@@ -47,13 +47,26 @@ module.exports = (client) => {
 
         // Check if the message author is bot
         if (author.bot) return
+        var PREFIX
+        const db = admin.firestore()
+        
+        PREFIX = await db.collection('guilds').doc(guild.id).get()
+                .then(doc => {
+                    if(!doc.exists) return prefix
+                    if (!doc.data().prefix) return prefix
+                    return doc.data().prefix
+                }).catch(error=>{
+                    PREFIX = prefix
+                    throw new Error("Error: Failed to getting document!\nSetting prefix to default")
+                })
+ 
 
         // Check if the message starts with prefix(!)
-        if (!msg.content.startsWith(prefix)) return
+        if (!msg.content.startsWith(PREFIX)) return
 
         // Parts a messages
         const args = msg.content
-            .slice(prefix.length)
+            .slice(PREFIX.length)
             .trim()
             .split(/ +/g)
 
@@ -103,11 +116,11 @@ module.exports = (client) => {
                 .setTitle(`❌ | You must specify argument, **${msg.author.tag}**!`)
             // Check if the command has usage
             if (cmd.usage) {
-                msgEmbed.addField("Usage:", `\`${prefix}${cmdName} ${cmd.usage}\``)
+                msgEmbed.addField("Usage:", `\`${PREFIX}${cmdName} ${cmd.usage}\``)
                 //reply += `\nUsage: \`${prefix}${cmdName} ${cmd.usage}\``
             }
             if (cmd.example) {
-                msgEmbed.addField("Example:", `\`${prefix}${cmdName} ${cmd.example}\``)
+                msgEmbed.addField("Example:", `\`${PREFIX}${cmdName} ${cmd.example}\``)
                 //reply += `\nExample: \`${prefix}${cmdName} ${cmd.example}\``
             }
             return msg.channel.send(msgEmbed)

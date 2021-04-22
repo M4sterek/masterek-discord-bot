@@ -1,3 +1,4 @@
+const {isURL} = require(__dirname+"/../resources/functions/isUrl.function.js")
 module.exports = {
     name: "message",
     run(msg) {
@@ -6,17 +7,8 @@ module.exports = {
             author
         } = msg
         const channelsID = ["831294131472564334"]
-        const isURL = (urlArg) => {
-            let url
-            try {
-                url = new URL(urlArg)
-            } catch (error) {
-                return false;
-            }
-            return url.protocol === "http:" || url.protocol === "https:";
-        }
         if (!(channelsID.includes(channel.id))) return
-        if (isURL(msg.content) === false) {
+        if (isURL(msg.content,URL) === false) {
             try {
                 msg.delete()
             } catch (error) {

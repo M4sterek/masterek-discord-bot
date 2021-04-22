@@ -9,7 +9,7 @@ module.exports = {
         const msgContent = "https://steamcommunity.com/sharedfiles/filedetails/?id=2428289110"
         msg.author.send(msgContent)
             .then(()=>{
-                if(msg.channel.type==="dm ") return
+                if(msg.channel.type==="dm") return
                 msg.channel.send("Link to gmod collection has been sent on dm!")
             })
             .catch(error=>{
