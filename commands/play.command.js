@@ -166,5 +166,18 @@ module.exports = {
 
             return serverQueue.txtChannel.send(queueEmbed)
         }
+        if(args[0]==="skip"){
+            if(!serverQueue){
+                return channel.send("Server doesn't exists! You need to use play first!")
+            }
+            if(!serverQueue.songs.length){
+                return serverQueue.txtChannel.send("Queue is empty!")
+            }
+            if(!serverQueue.songs.length===1){
+                return serverQueue.txtChannel.send("There isn't a song I can skip to!")
+            }
+            serverQueue.songs.shift()
+            playSong(serverQueue.songs[0].url)
+        }
     }
 }
