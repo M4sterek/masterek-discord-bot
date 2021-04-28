@@ -20,10 +20,10 @@ module.exports = {
         const serverQueue = queue.get(guild.id)
         const nowPlaying = (serverQueue) => {
             if (!serverQueue) {
-                return channel.send("Server queue doesn't exists! You need to use play first!")
+                return "Server queue doesn't exists! You need to use play first!"
             }
             if (!serverQueue.songs.length) {
-                return serverQueue.txtChannel.send("Queue is empty!")
+                return "Queue is empty!"
             }
             const song = serverQueue.songs[0]
             const queueEmbed = new MessageEmbed()

@@ -2,31 +2,32 @@ const {
     queue
 } = require(__dirname + "/../config/config.js")
 module.exports = {
-    name: "skip",
+    name: "pause",
     category: "music",
     description: "play some music!",
     botPermissions: [],
     userPermissions: [],
-    aliases: ['s',"se"],
+    aliases: [],
     run(msg, args) {
         const {
             guild,
             channel
         } = msg
         const serverQueue = queue.get(guild.id)
-        const skip = (serverQueue) => {
+        const pause = (serverQueue) => {
             if (!serverQueue) {
                 return "Server queue doesn't exists! You need to use play first!"
             }
-            if (!serverQueue.songs.length) {
-                return "Queue is empty!"
+            if (!serverQueue.songs[0]) {
+                return "There's nothing to pause!"
             }
-            if (serverQueue.songs.length === 1) {
-                return "There isn't a song I can skip to!"
+            if(serverQueue.playing === false){
+                return `\`${serverQueue.songs[0].title}\` **is actually paused!**`
             }
-            serverQueue.connection.dispatcher.end()
-            return `\`${serverQueue.songs[0].title}\` **skipped!**`
+            serverQueue.connection.dispatcher.pause()
+            serverQueue.playing = false
+            return `**Paused song:** \`${serverQueue.songs[0].title}\` `
         }
-        channel.send(skip(serverQueue))
+        channel.send(pause(serverQueue))
     }
 }

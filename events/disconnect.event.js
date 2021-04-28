@@ -1,16 +1,13 @@
+const {
+    queue
+} = require(__dirname + "/../config/config.js")
 module.exports = {
     name:"voiceStateUpdate",
-    run(oldMember, newMember){
-        console.log(oldMember)
-    const oldChannelId = oldMember.channelID
-    const newChannelId = newMember.channelID
-    if(oldChannelId === undefined && newChannelId !== undefined) {
-
-        console.log('joined')
-     } else if(newChannelId === undefined){
-   
-       console.log('left')
-   
+    run(oldState, newState){
+    const newChannelId = newState.channel
+    if(newState.member.id!=="691785599912509440") return
+    if(newChannelId === null){
+         queue.delete(newState.member.guild.id)
      }
 
     }

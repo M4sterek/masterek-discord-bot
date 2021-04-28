@@ -36,7 +36,7 @@ module.exports = {
             if (!songs.length) {
                 queueEmbed
                     .setDescription(`💿 | **NOW PLAYING**\n**[${song.title}](${song.url})**\n**${song.author}** [\`${song.length}\`]`)
-                return serverQueue.txtChannel.send(queueEmbed)
+                return queueEmbed
             }
             let data = []
             let i = 1

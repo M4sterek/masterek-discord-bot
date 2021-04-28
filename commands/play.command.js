@@ -44,9 +44,11 @@ module.exports = {
                         return setTimeout(() => {
                             if (!serverQueue.songs.length) {
                                 queue.delete(guild.id)
-                                return serverQueue.vcChannel.leave()
+                                serverQueue.vcChannel.leave()
+                                return channel.send("Queue is empty! Leaving voice channel!")
                             }
                             playSong(serverQueue.songs[0].url)
+                            return channel.send(`\`${serverQueue.songs[0].title}\` **added to queue!**`)
                         }, 3000)
                     }
                     playSong(serverQueue.songs[0].url)
@@ -99,11 +101,12 @@ module.exports = {
                 try {
                     const connection = await voiceChannel.join()
                     queue.get(guild.id).connection = connection
-                    queue.get(guild.id).txtChannel.send(`\`${song.title}\` **added to queue!**`)
-                    return playSong(queue.get(guild.id).songs[0].url)
+                    playSong(queue.get(guild.id).songs[0].url)
+                    return channel.send(`\`${queue.get(guild.id).songs[0].title}\` **added to queue!**`)
                 } catch {
                     queue.get(guild.id).songs.shift
                     console.log("Unable to play video!")
+                    return channel.send("Unable to play video!")
                 }
 
             }
@@ -111,13 +114,13 @@ module.exports = {
                     serverQueue.vcChannel = member.voice.channel
                     serverQueue.songs = []
                     serverQueue.songs.push(song)
-                    serverQueue.txtChannel.send(`\`${song.title}\` **added to queue!**`)
                     const connection = await serverQueue.vcChannel.join()
                     serverQueue.connection = connection
-                    return playSong(serverQueue.songs[0].url)
+                    playSong(serverQueue.songs[0].url)
+                    return channel.send(`\`${song.title}\` **added to queue!**`)
                 }
                 serverQueue.songs.push(song)
-                return serverQueue.txtChannel.send(`\`${song.title}\` **added to queue!**`)
+                return channel.send(`\`${song.title}\` **added to queue!**`)
         }
         
         const voiceChannel = member.voice.channel;
@@ -128,7 +131,7 @@ module.exports = {
         if (!voiceChannel.joinable) {
             return channel.send(`I can't join in ${voiceChannel.name}! Maybe I don't have enough permissions.`)
         }
-        return play(serverQueue)
+        play(serverQueue)
 
 
     }
