@@ -21,9 +21,6 @@ module.exports = {
             if (!serverQueue.songs.length) {
                 return "Queue is empty!"
             }
-            if (serverQueue.songs.length === 1) {
-                return "There isn't a song I can skip to!"
-            }
             serverQueue.connection.dispatcher.end()
             return `\`${serverQueue.songs[0].title}\` **skipped!**`
         }
