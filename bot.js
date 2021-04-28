@@ -18,9 +18,7 @@ eventHandler(client)
 client.login(token)
 // Client is ready
 client.on('ready', () => {
-  console.log(chalk.red('<============================================>'))
-  console.log(chalk.red('Logged in as', client.user.tag))
-  console.log(chalk.red('<============================================>'))
+  console.log(chalk.green('✅ Logged in as', client.user.tag))
   client.user.setActivity(`Alchemy || ${prefix}help`, {
     type: 'PLAYING'
   })

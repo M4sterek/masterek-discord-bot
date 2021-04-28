@@ -1,9 +1,12 @@
+const { Collection } = require("discord.js")
+
 require("dotenv").config()
 
 module.exports = {
     token: process.env.TOKEN,
     prefix: "ed.",
     waitingTime: 1000,
+    queue: new Collection(),
     serviceAccount: {
         type: "service_account",
         project_id: "masterek-discord-bot",

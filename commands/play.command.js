@@ -13,10 +13,9 @@ const {
 } = require(__dirname + "/../resources/functions/isUrl.function.js")
 const ytdl = require('ytdl-core');
 const ytsr = require('ytsr');
-const admin = require("firebase-admin");
-const queue = new Collection()
+const {queue} = require(__dirname+"/../config/config.js")
 module.exports = {
-    name: "music",
+    name: "play",
     category: "music",
     description: "play some music!",
     args: true,
@@ -32,7 +31,6 @@ module.exports = {
             client,
             guild
         } = msg
-
         const serverQueue = queue.get(guild.id)
         const playSong = (URL) => {
             const serverQueue = queue.get(guild.id)
@@ -45,7 +43,7 @@ module.exports = {
                     if (!serverQueue.songs.length) {
                         return setTimeout(() => {
                             if (!serverQueue.songs.length) {
-                                serverQueue.playing = false
+                                queue.delete(guild.id)
                                 return serverQueue.vcChannel.leave()
                             }
                             playSong(serverQueue.songs[0].url)
@@ -54,29 +52,19 @@ module.exports = {
                     playSong(serverQueue.songs[0].url)
                 })
         }
-
-        const voiceChannel = member.voice.channel;
-
-        if (!voiceChannel) {
-            return channel.send("You must be in voice chat to use this command!")
-        }
-        if (!voiceChannel.joinable) {
-            return channel.send(`I can't join in ${voiceChannel.name}! Maybe I don't have enough permissions.`)
-        }
-        if (args[0] === "play") {
+        const play = async (serverQueue) =>{
             let titleArg;
             try {
-                titleArg = new URL(args[1])
+                titleArg = new URL(args[0])
                 if (titleArg.host !== "www.youtube.com") {
                     return channel.send("Unknown file format!")
                 }
             } catch {
-                titleArg = args[1]
+                titleArg = args.join(" ")
             }
-
             if (isURL(titleArg, URL) === false) {
                 try {
-                    const filter1 = await ytsr.getFilters(args.splice(1,args.length-1).join(" "))
+                    const filter1 = await ytsr.getFilters(titleArg)
                     const filters1 = filter1.get('Type').get('Video')
                     const result = await ytsr(filters1.url, {
                         pages: 1
@@ -89,7 +77,7 @@ module.exports = {
                 }
             }
             const songInfo = await ytdl.getInfo(titleArg)
-            const songLength = `${Math.floor(songInfo.videoDetails.lengthSeconds/60)}:${songInfo.videoDetails.lengthSeconds%60}`
+            const songLength = `${Math.floor(songInfo.videoDetails.lengthSeconds/60)}:${songInfo.videoDetails.lengthSeconds%60<10 ? "0"+songInfo.videoDetails.lengthSeconds%60 : songInfo.videoDetails.lengthSeconds%60}`
             let song = {
                 author: songInfo.videoDetails.ownerChannelName,
                 length: songLength,
@@ -119,65 +107,29 @@ module.exports = {
                 }
 
             }
-            if (serverQueue.playing === true) {
+            if(serverQueue.vcChannel !== member.voice.channel ){
+                    serverQueue.vcChannel = member.voice.channel
+                    serverQueue.songs = []
+                    serverQueue.songs.push(song)
+                    serverQueue.txtChannel.send(`\`${song.title}\` **added to queue!**`)
+                    const connection = await serverQueue.vcChannel.join()
+                    serverQueue.connection = connection
+                    return playSong(serverQueue.songs[0].url)
+                }
                 serverQueue.songs.push(song)
                 return serverQueue.txtChannel.send(`\`${song.title}\` **added to queue!**`)
-            }
-            try {
-                serverQueue.songs.push(song)
-                serverQueue.txtChannel.send(`\`${song.title}\` **added to queue!**`)
-                const connection = await voiceChannel.join()
-                serverQueue.connection = connection
-                serverQueue.playing = true
-                return playSong(serverQueue.songs[0].url)
-            } catch {
-                serverQueue.songs.push(song).get(guild.id).songs.shift
-                console.log("Unable to play video!")
-            }
-
         }
-        if(args[0]==="queue"){
-            if(!serverQueue){
-                return channel.send("Server doesn't exists! You need to use play first!")
-            }
-            if(!serverQueue.songs.length){
-                return serverQueue.txtChannel.send("Queue is empty!")
-            }
+        
+        const voiceChannel = member.voice.channel;
 
-            const song = serverQueue.songs[0]
-            const queueEmbed = new MessageEmbed()
-            .setColor(3066993)
-            .setAuthor("Song queue")
-            .setThumbnail(song.miniature)
-            const songs = serverQueue.songs.splice(1,serverQueue.songs.length-1)
-            if(!songs.length){
-                queueEmbed
-                    .setDescription(`💿 | NOW PLAYING\n**[${song.title}](${song.url})**\n**${song.author}** ${song.length}`)
-                return serverQueue.txtChannel.send(queueEmbed)
-            }
-            let data = []
-            let i = 1
-            for(let song of serverQueue.songs){
-                data.push(`${i}. [${song.title}](${song.url}) [\`${song.length}\`]`)
-            }
-            queueEmbed
-                .setDescription(`💿 | NOW PLAYING\n**[${song.title}](${song.url})**\n**${song.author}** ${song.length}\n\n${data}`)
-
-
-            return serverQueue.txtChannel.send(queueEmbed)
+        if (!voiceChannel) {
+            return channel.send("You must be in voice chat to use this command!")
         }
-        if(args[0]==="skip"){
-            if(!serverQueue){
-                return channel.send("Server doesn't exists! You need to use play first!")
-            }
-            if(!serverQueue.songs.length){
-                return serverQueue.txtChannel.send("Queue is empty!")
-            }
-            if(!serverQueue.songs.length===1){
-                return serverQueue.txtChannel.send("There isn't a song I can skip to!")
-            }
-            serverQueue.songs.shift()
-            playSong(serverQueue.songs[0].url)
+        if (!voiceChannel.joinable) {
+            return channel.send(`I can't join in ${voiceChannel.name}! Maybe I don't have enough permissions.`)
         }
+        return play(serverQueue)
+
+
     }
 }

@@ -43,5 +43,5 @@ module.exports = (client) => {
         eventRegisteredAmount++
     }
     console.log(table.toString())
-    console.log(chalk.green(`Registered events: ${eventRegisteredAmount}`))
+  console.log(chalk.green(`✅ Registered events: ${eventRegisteredAmount}`))
 }

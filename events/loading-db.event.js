@@ -11,9 +11,9 @@ module.exports = {
             })
 
         }catch(error){
-            console.log(chalk.green(`Database initializing failed!`))
+            console.log(chalk.red(`Database initializing failed!`))
             console.error(error)
         }
-        console.log(chalk.yellow(`Database succesfully initalized!`))
+        console.log(chalk.green(`✅ Database succesfully initalized!`))
     }
 }
