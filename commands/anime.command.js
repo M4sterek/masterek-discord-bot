@@ -34,6 +34,7 @@ module.exports = {
             .setColor(3447003)
             
         const sendAnimeInfo = (jsonArray) => {
+            console.log(jsonArray)
             const animeInfoEmbed = new MessageEmbed()
                 .setAuthor(`${jsonArray.attributes.titles.en || jsonArray.attributes.titles.en_jp || jsonArray.attributes.titles.en_us} (${jsonArray.attributes.titles.ja_jp ? jsonArray.attributes.titles.ja_jp : "Japanese title not found!"})`, jsonArray.attributes.posterImage.large,`https://kitsu.io/anime/${jsonArray.attributes.slug}`)
                 .setDescription(jsonArray.attributes.description)
@@ -49,6 +50,7 @@ module.exports = {
                 .addField("⭐ Favorites Count", jsonArray.attributes.favoritesCount ? jsonArray.attributes.favoritesCount : " - ", true)
                 .addField("👑 Rank", jsonArray.attributes.ratingRank ? `**TOP ${jsonArray.attributes.ratingRank}**` : " - ", true)
                 .addField("🏆 Average Rating", jsonArray.attributes.averageRating ? `**${jsonArray.attributes.averageRating}/100**` : " - ", true)
+                .addField("🚩 Status", jsonArray.attributes.status ? `**${jsonArray.attributes.stats}**` : " - ", true)
                 .setFooter("Powered by kitsu.io", msg.author.displayAvatarURL())
             channel.send(animeInfoEmbed)
         }
