@@ -11,7 +11,7 @@ module.exports = {
     guildOnly: true,
     cooldown: 5,
     aliases: ["purge"],
-    userPermissions:[],
+    userPermissions:[FLAGS.ADMINISTRATOR],
     run(msg, args) {
 
         const {
