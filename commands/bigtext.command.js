@@ -1,3 +1,4 @@
+const {Permissions: {FLAGS}} = require('discord.js')
 module.exports = {
     name: "bigtext",
     description: "Exchange the letter with big emotes!",
