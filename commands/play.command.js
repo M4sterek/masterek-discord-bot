@@ -87,6 +87,7 @@ module.exports = {
                 title: songInfo.videoDetails.title,
                 url: songInfo.videoDetails.video_url
             }
+            console.log(song)
             if (!serverQueue) {
                 const queueConstructor = {
                     txtChannel: msg.channel,

@@ -25,6 +25,14 @@ module.exports = {
             if (!serverQueue.songs.length) {
                 return "Queue is empty!"
             }
+            let data = []
+            if(serverQueue.songs.length>1){
+            for (let i = 1; i<serverQueue.songs.length;i++) {
+                songe = serverQueue.songs[i]
+                data.push(`${i}. [${songe.title}](${songe.url}) [\`${songe.length}\`]\n`)
+            }
+        }
+
             const song = serverQueue.songs[0]
             const queueEmbed = new MessageEmbed()
                 .setColor(3066993)
@@ -32,19 +40,7 @@ module.exports = {
                     format: 'png'
                 }))
                 .setThumbnail(song.miniature)
-            const songs = serverQueue.songs.splice(1, serverQueue.songs.length - 1)
-            if (!songs.length) {
-                queueEmbed
-                    .setDescription(`💿 | **NOW PLAYING**\n**[${song.title}](${song.url})**\n**${song.author}** [\`${song.length}\`]`)
-                return queueEmbed
-            }
-            let data = []
-            let i = 1
-            for (let song of serverQueue.songs) {
-                data.push(`${i}. [${song.title}](${song.url}) [\`${song.length}\`]`)
-            }
-            queueEmbed
-                .setDescription(`💿 | **NOW PLAYING**\n**[${song.title}](${song.url})**\n**${song.author}** ${song.length}\n\n${data}`)
+                .setDescription(`💿 | **NOW PLAYING**\n**[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})**\n**${serverQueue.songs[0].author}** [\`${serverQueue.songs[0].length}\`]\n${data.join('')}`)
             return queueEmbed
         }
         return channel.send(songsQueue(serverQueue))
