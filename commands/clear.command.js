@@ -1,4 +1,6 @@
 const {waitingTime} = require(__dirname+"/../config/config.js")
+const {Permissions: {FLAGS}} = require('discord.js')
+
 module.exports = {
     name: "clear",
     category: "other",
@@ -9,6 +11,7 @@ module.exports = {
     guildOnly: true,
     cooldown: 5,
     aliases: ["purge"],
+    userPermissions:[],
     run(msg, args) {
 
         const {

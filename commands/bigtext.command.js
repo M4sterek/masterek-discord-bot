@@ -7,6 +7,7 @@ module.exports = {
     usage: "[some text]",
     example: "ABC",
     aliases: ["emojify"],
+    userPermissions:[FLAGS.ADMINISTRATOR],
     run(msg, args) {
         const {
             channel,
