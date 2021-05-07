@@ -3,12 +3,13 @@ const {
   prefix
 } = require(__dirname + "/../config/config.js")
 var admin = require("firebase-admin");
-
+const {Permissions:{FLAGS}} = require('discord.js')
 module.exports = {
   name: "prefix",
   category: "other",
   description: "Set prefix of current guild!",
   guildOnly: true,
+  userPermissions:[FLAGS.ADMINISTRATOR],
   async run(msg, args) {
     const {
       guild,

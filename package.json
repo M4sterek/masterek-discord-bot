@@ -31,7 +31,7 @@
     "node-pre-gyp": "^0.17.0",
     "pm2": "^4.5.5",
     "simple-get": "^4.0.0",
-    "ytdl-core": "^4.5.0",
+    "ytdl-core": "^4.7.0",
     "ytsr": "^3.4.0"
   },
   "optionalDependencies": {

@@ -7,7 +7,7 @@ module.exports = {
     description: "play some music!",
     botPermissions: [],
     userPermissions: [],
-    aliases: ['s',"se"],
+    aliases: ['s'],
     run(msg, args) {
         const {
             guild,
